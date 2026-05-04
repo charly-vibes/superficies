@@ -1,0 +1,230 @@
+:root {
+  color-scheme: light dark;
+  font-family: Inter, system-ui, sans-serif;
+  --bg: oklch(96% 0.03 95);
+  --panel: oklch(100% 0 0);
+  --ink: oklch(24% 0.03 260);
+  --muted: oklch(45% 0.03 260);
+  --accent: oklch(74% 0.18 85);
+  --accent-ink: oklch(18% 0.03 255);
+  --border: oklch(30% 0.03 250);
+  --shadow: 6px 6px 0 rgb(20 20 20 / 0.85);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+button,
+select {
+  font: inherit;
+}
+
+button,
+select,
+.zone,
+.export-panel {
+  border: 2px solid var(--border);
+  border-radius: 0.9rem;
+  box-shadow: var(--shadow);
+}
+
+button,
+select {
+  background: var(--panel);
+  color: var(--ink);
+  padding: 0.7rem 1rem;
+}
+
+button {
+  cursor: pointer;
+}
+
+button.secondary {
+  background: transparent;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.shell {
+  min-height: 100vh;
+  padding: 1.5rem;
+}
+
+.topbar,
+.preview-grid,
+.actions,
+.specimen-row,
+.hero-actions,
+.token-grid,
+.export-header,
+.tab-row,
+.export-footer {
+  display: flex;
+  gap: 1rem;
+}
+
+.topbar,
+.zone,
+.export-panel {
+  background: var(--panel);
+}
+
+.topbar {
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+}
+
+.actions {
+  align-items: end;
+  flex-wrap: wrap;
+}
+
+.actions label {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.preview-grid {
+  flex-direction: column;
+}
+
+.zone {
+  padding: 1.25rem;
+}
+
+.hero-zone h2 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 0.95;
+  margin: 0.25rem 0 1rem;
+  max-width: 12ch;
+}
+
+.zone-label,
+.kicker,
+.eyebrow {
+  margin: 0;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+}
+
+.specimen-row {
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.chip,
+.specimen-card,
+.token-grid article {
+  border: 2px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 0.8rem 1rem;
+}
+
+.token-grid {
+  flex-wrap: wrap;
+}
+
+.token-grid article {
+  flex: 1 1 12rem;
+}
+
+.export-dialog {
+  max-width: min(48rem, calc(100vw - 2rem));
+  width: 100%;
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.export-dialog::backdrop {
+  background: rgb(15 15 20 / 0.45);
+}
+
+.export-panel {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.export-header,
+.export-footer {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tab-row {
+  flex-wrap: wrap;
+}
+
+.tab-row button.is-active {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.export-output {
+  margin: 0;
+  min-height: 16rem;
+  overflow: auto;
+  padding: 1rem;
+  border-radius: 0.9rem;
+  background: oklch(98% 0.01 95);
+  border: 2px solid var(--border);
+}
+
+.copy-feedback {
+  color: var(--muted);
+}
+
+.shell[data-mode='dark'] {
+  --bg: oklch(18% 0.02 255);
+  --panel: oklch(24% 0.02 255);
+  --ink: oklch(96% 0.01 95);
+  --muted: oklch(78% 0.02 95);
+  --border: oklch(80% 0.02 95);
+  --shadow: 6px 6px 0 rgb(0 0 0 / 0.45);
+}
+
+.shell[data-mode='both'] .preview-grid {
+  position: relative;
+}
+
+.shell[data-mode='both'] .preview-grid::after {
+  content: 'Light + dark comparison mode will split into side-by-side previews in a later slice.';
+  display: block;
+  border: 2px dashed var(--border);
+  border-radius: 0.9rem;
+  padding: 1rem;
+  color: var(--muted);
+  background: color-mix(in oklch, var(--panel) 92%, var(--accent));
+}
+
+@media (max-width: 720px) {
+  .shell {
+    padding: 1rem;
+  }
+
+  .topbar,
+  .actions,
+  .export-header,
+  .export-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
