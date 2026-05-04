@@ -1,0 +1,1 @@
+Read the design catalog spec. Core constraints: single self-contained dist/index.html, TypeScript + Vite + vite-plugin-singlefile, vanilla HTML/CSS/TS, URL-hash-only persistence, fixed three-zone preview, and deterministic export formats (XML, Markdown, token JSON).
