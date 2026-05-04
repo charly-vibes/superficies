@@ -1,4 +1,4 @@
-import { archetypeContent, presets } from './data.ts';
+import { archetypeContent, defaultBodyFonts, presets, validBodyFonts } from './data.ts';
 import type {
   CatalogState,
   ExportContext,
@@ -8,6 +8,7 @@ import type {
   LiveDimensionKey,
   LiveDimensions,
   Preset,
+  Typography,
 } from './types.ts';
 
 export const emptyContentOverrides = {
@@ -80,6 +81,18 @@ export function updateContentOverride(
       ...current.contentOverrides,
       [key]: normalized,
     },
+  };
+}
+
+export function updateTypography(value: Typography, current: CatalogState): CatalogState {
+  const bodyFont = validBodyFonts[value].includes(current.live.bodyFont)
+    ? current.live.bodyFont
+    : defaultBodyFonts[value];
+  const changed = value !== current.live.typography || bodyFont !== current.live.bodyFont;
+  return {
+    ...current,
+    live: { ...current.live, typography: value, bodyFont },
+    departedFromPreset: changed ? true : current.departedFromPreset,
   };
 }
 

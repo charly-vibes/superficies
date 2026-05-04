@@ -12,7 +12,7 @@ test('writeStateToHash serializes supported state deterministically with compact
     mode: 'dark',
   };
 
-  assert.equal(writeStateToHash(state), '#p=n&a=r&m=d&hl=hf&ty=c&co=a&sp=b&de=m&ra=h&su=o&cu=0');
+  assert.equal(writeStateToHash(state), '#p=n&a=r&m=d&hl=hf&ty=c&bf=s&co=a&sp=b&de=m&ra=h&su=o&cu=0');
 });
 
 test('readStateFromHash round-trips valid supported fields', () => {
@@ -38,12 +38,17 @@ test('readStateFromHash round-trips valid supported fields', () => {
   assert.deepEqual(readStateFromHash(writeStateToHash(original)), original);
 });
 
-test('readStateFromHash accepts compact aliases', () => {
+test('readStateFromHash accepts compact aliases without bf param and derives bodyFont from typography', () => {
   assert.deepEqual(readStateFromHash('#p=n&a=e&m=l&hl=hf&ty=c&co=a&sp=b&de=m&ra=h&su=o&cu=0'), {
     ...defaultState,
     archetype: 'editorial',
     mode: 'light',
   });
+});
+
+test('readStateFromHash accepts explicit bf param', () => {
+  const result = readStateFromHash('#p=n&a=s&m=l&hl=hf&ty=s&bf=f&co=a&sp=b&de=m&ra=h&su=o&cu=0');
+  assert.equal(result.live.bodyFont, 'serif');
 });
 
 test('readStateFromHash falls back to defaults for unsupported values', () => {
@@ -52,4 +57,29 @@ test('readStateFromHash falls back to defaults for unsupported values', () => {
 
 test('readStateFromHash falls back to defaults when the hash is missing', () => {
   assert.deepEqual(readStateFromHash(''), defaultState);
+});
+
+test('writeStateToHash falls back to base64 when readable hash exceeds threshold', () => {
+  const longText = 'a'.repeat(450);
+  const state: CatalogState = {
+    ...defaultState,
+    contentOverrides: { ...defaultState.contentOverrides, copy: longText },
+  };
+
+  const hash = writeStateToHash(state);
+  assert.match(hash, /^#b64=/);
+});
+
+test('readStateFromHash round-trips fallback base64 hash back to original state', () => {
+  const longText = 'a'.repeat(450);
+  const state: CatalogState = {
+    ...defaultState,
+    contentOverrides: { ...defaultState.contentOverrides, copy: longText },
+  };
+
+  assert.deepEqual(readStateFromHash(writeStateToHash(state)), state);
+});
+
+test('readStateFromHash returns default state for malformed base64 fallback', () => {
+  assert.deepEqual(readStateFromHash('#b64=!!!notbase64!!!'), defaultState);
 });

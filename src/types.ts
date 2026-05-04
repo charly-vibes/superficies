@@ -4,6 +4,7 @@ export type Preset = 'neobrutalist' | 'softSaas' | 'warmEditorial';
 export type HeroLayout = 'hero+features' | 'bento' | 'magazine' | 'sidebar+main';
 
 export type Typography = 'chunky' | 'system' | 'serif';
+export type BodyFont = 'system' | 'serif';
 export type Colorway = 'acid' | 'sky' | 'sepia';
 export type Spacing = 'tight' | 'balanced' | 'loose';
 export type Density = 'compact' | 'comfortable' | 'roomy';
@@ -12,6 +13,7 @@ export type Surface = 'flat' | 'outlined' | 'elevated';
 
 export interface LiveDimensions {
   typography: Typography;
+  bodyFont: BodyFont;
   color: Colorway;
   spacing: Spacing;
   density: Density;

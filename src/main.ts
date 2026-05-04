@@ -2,8 +2,8 @@ import './styles/app.css';
 
 import { createCatalogController, type StateUpdate } from './app.ts';
 import { attachExportInteractions, renderApp } from './render.ts';
-import { applyPreset, updateContentOverride, updateExportContext, updateLiveDimension } from './state.ts';
-import type { Archetype, ExportContextKey, ExportFormat, HeroLayout, HeroOverrideKey, LiveDimensionKey, Mode, Preset } from './types.ts';
+import { applyPreset, updateContentOverride, updateExportContext, updateLiveDimension, updateTypography } from './state.ts';
+import type { Archetype, ExportContextKey, ExportFormat, HeroLayout, HeroOverrideKey, LiveDimensionKey, Mode, Preset, Typography } from './types.ts';
 
 const target = document.querySelector<HTMLElement>('#app');
 
@@ -83,9 +83,13 @@ function bindControls(target: HTMLElement, onPatch: (patch: StateUpdate) => void
   liveControls.forEach((control) => {
     control.addEventListener('change', (event) => {
       const element = event.currentTarget as HTMLSelectElement;
-      onPatch((current) =>
-        updateLiveDimension(element.name as LiveDimensionKey, element.value as never, current),
-      );
+      if (element.name === 'typography') {
+        onPatch((current) => updateTypography(element.value as Typography, current));
+      } else {
+        onPatch((current) =>
+          updateLiveDimension(element.name as LiveDimensionKey, element.value as never, current),
+        );
+      }
     });
   });
 }

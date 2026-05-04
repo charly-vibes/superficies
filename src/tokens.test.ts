@@ -40,6 +40,7 @@ test('deriveDesignTokens changes computed values when live dimensions change', (
     ...defaultState,
     live: {
       typography: 'serif',
+      bodyFont: 'serif',
       color: 'sepia',
       spacing: 'loose',
       density: 'roomy',

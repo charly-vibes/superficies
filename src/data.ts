@@ -1,4 +1,16 @@
-import type { Archetype, ArchetypeContent, Preset, PresetDefinition } from './types.ts';
+import type { Archetype, ArchetypeContent, BodyFont, Preset, PresetDefinition, Typography } from './types.ts';
+
+export const validBodyFonts: Record<Typography, BodyFont[]> = {
+  chunky: ['system'],
+  system: ['system', 'serif'],
+  serif: ['serif', 'system'],
+};
+
+export const defaultBodyFonts: Record<Typography, BodyFont> = {
+  chunky: 'system',
+  system: 'system',
+  serif: 'serif',
+};
 
 export const presets: Record<Preset, PresetDefinition> = {
   neobrutalist: {
@@ -6,6 +18,7 @@ export const presets: Record<Preset, PresetDefinition> = {
     label: 'Neobrutalist',
     live: {
       typography: 'chunky',
+      bodyFont: 'system',
       color: 'acid',
       spacing: 'balanced',
       density: 'comfortable',
@@ -18,6 +31,7 @@ export const presets: Record<Preset, PresetDefinition> = {
     label: 'Soft SaaS',
     live: {
       typography: 'system',
+      bodyFont: 'system',
       color: 'sky',
       spacing: 'loose',
       density: 'roomy',
@@ -30,6 +44,7 @@ export const presets: Record<Preset, PresetDefinition> = {
     label: 'Warm Editorial',
     live: {
       typography: 'serif',
+      bodyFont: 'serif',
       color: 'sepia',
       spacing: 'loose',
       density: 'comfortable',
