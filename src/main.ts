@@ -92,4 +92,11 @@ function bindControls(target: HTMLElement, onPatch: (patch: StateUpdate) => void
       }
     });
   });
+
+  const sidebar = target.querySelector<HTMLElement>('.sidebar');
+  const editOpenButton = target.querySelector<HTMLButtonElement>('[data-edit-open]');
+  const sidebarCloseButton = target.querySelector<HTMLButtonElement>('.sidebar-close');
+
+  editOpenButton?.addEventListener('click', () => sidebar?.classList.add('is-open'));
+  sidebarCloseButton?.addEventListener('click', () => sidebar?.classList.remove('is-open'));
 }

@@ -107,6 +107,36 @@ test('renderApp exposes export-only context controls', () => {
   }
 });
 
+test('renderApp renders sidebar with collapsible sections for grouped controls', () => {
+  const target = { innerHTML: '' };
+
+  renderApp(target as HTMLElement, defaultState);
+
+  assert.match(target.innerHTML, /class="sidebar"/);
+  assert.match(target.innerHTML, /sidebar-section/);
+  assert.match(target.innerHTML, /<details /);
+  assert.match(target.innerHTML, /<summary>/);
+});
+
+test('renderApp bottom bar exposes edit-open and export-open actions', () => {
+  const target = { innerHTML: '' };
+
+  renderApp(target as HTMLElement, defaultState);
+
+  assert.match(target.innerHTML, /class="bottom-bar"/);
+  assert.match(target.innerHTML, /data-edit-open/);
+  const exportCount = (target.innerHTML.match(/data-export-open/g) ?? []).length;
+  assert.ok(exportCount >= 2, 'export reachable from sidebar and bottom bar');
+});
+
+test('renderApp sidebar includes close control for mobile dismiss', () => {
+  const target = { innerHTML: '' };
+
+  renderApp(target as HTMLElement, defaultState);
+
+  assert.match(target.innerHTML, /sidebar-close/);
+});
+
 test('renderApp escapes user-provided content overrides before injecting markup', () => {
   const target = { innerHTML: '' };
 
