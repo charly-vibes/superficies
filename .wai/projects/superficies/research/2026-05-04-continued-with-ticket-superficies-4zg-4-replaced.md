@@ -1,0 +1,1 @@
+Continued with ticket superficies-4zg.4: replaced placeholder specimen strip with deterministic reference groups for buttons, inputs, card, dialog trigger, form group, loading, and feedback; added explicit data-forced-state examples for hover, focus-visible, active, disabled, and loading. Verified with npm test, npm run check, and npm run build.

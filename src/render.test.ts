@@ -41,3 +41,23 @@ test('renderApp renders the selected hero layout without dropping other preview 
   assert.match(target.innerHTML, /Specimen strip/);
   assert.match(target.innerHTML, /Token panel/);
 });
+
+test('renderApp specimen strip includes required component groups', () => {
+  const target = { innerHTML: '' };
+
+  renderApp(target as HTMLElement, defaultState);
+
+  for (const group of ['Buttons', 'Inputs', 'Card', 'Dialog trigger', 'Form group', 'Loading', 'Feedback']) {
+    assert.match(target.innerHTML, new RegExp(group));
+  }
+});
+
+test('renderApp specimen strip exposes forced states simultaneously', () => {
+  const target = { innerHTML: '' };
+
+  renderApp(target as HTMLElement, defaultState);
+
+  for (const state of ['hover', 'focus-visible', 'active', 'disabled', 'loading']) {
+    assert.match(target.innerHTML, new RegExp(`data-forced-state="${state}"`));
+  }
+});
