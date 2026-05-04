@@ -75,6 +75,19 @@ test('renderApp token panel includes computed token values and contrast results'
   assert.match(target.innerHTML, /4px 4px 0 rgb\(20 20 20 \/ 0\.85\)/);
 });
 
+test('renderApp export workspace includes all artifact tabs and copy feedback region', () => {
+  const target = { innerHTML: '' };
+
+  renderApp(target as HTMLElement, defaultState);
+
+  assert.match(target.innerHTML, /data-export-open/);
+  assert.match(target.innerHTML, /data-export-tab="full"/);
+  assert.match(target.innerHTML, /data-export-tab="minimum"/);
+  assert.match(target.innerHTML, /data-export-tab="tokens"/);
+  assert.match(target.innerHTML, /data-copy/);
+  assert.match(target.innerHTML, /copy-feedback" aria-live="polite"/);
+});
+
 test('renderApp escapes user-provided content overrides before injecting markup', () => {
   const target = { innerHTML: '' };
 

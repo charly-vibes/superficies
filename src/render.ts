@@ -1,5 +1,5 @@
 import { presets } from './data.ts';
-import { getExportText, type ExportTab } from './export.ts';
+import { getExportArtifact, listExportArtifacts, type ExportTab } from './export.ts';
 import { resolveHeroContent } from './state.ts';
 import { deriveDesignTokens, type DesignTokens } from './tokens.ts';
 import type { CatalogState } from './types.ts';
@@ -8,7 +8,8 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
   const content = resolveHeroContent(state);
   const tokens = deriveDesignTokens(state);
   const appMode = state.mode;
-  const exportText = getExportText(state, 'full');
+  const exportArtifacts = listExportArtifacts(state);
+  const exportText = exportArtifacts[0]?.content ?? '';
   const presetStatus = state.departedFromPreset
     ? `Custom from ${presets[state.preset].label}`
     : presets[state.preset].label;
@@ -201,9 +202,12 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
             <button value="cancel" class="secondary">Close</button>
           </div>
           <div class="tab-row">
-            <button type="button" data-export-tab="full" class="is-active">Full brief</button>
-            <button type="button" data-export-tab="minimum">Minimum brief</button>
-            <button type="button" data-export-tab="tokens">Token JSON</button>
+            ${exportArtifacts
+              .map(
+                (artifact, index) =>
+                  `<button type="button" data-export-tab="${artifact.tab}" class="${index === 0 ? 'is-active' : ''}">${escapeHtml(artifact.label)}</button>`,
+              )
+              .join('')}
           </div>
           <pre class="export-output">${escapeHtml(exportText)}</pre>
           <div class="export-footer">
@@ -236,7 +240,8 @@ export function attachExportInteractions(target: HTMLElement, state: CatalogStat
     button.addEventListener('click', () => {
       const nextTab = button.dataset.exportTab as ExportTab;
       activeTab = nextTab;
-      output.textContent = getExportText(state, nextTab);
+      output.textContent = getExportArtifact(state, nextTab).content;
+      feedback.textContent = '';
       tabButtons.forEach((candidate) => {
         candidate.classList.toggle('is-active', candidate === button);
       });
@@ -245,7 +250,7 @@ export function attachExportInteractions(target: HTMLElement, state: CatalogStat
 
   copyButton.addEventListener('click', async () => {
     try {
-      await navigator.clipboard.writeText(getExportText(state, activeTab));
+      await navigator.clipboard.writeText(getExportArtifact(state, activeTab).content);
       feedback.textContent = 'Copied.';
       window.setTimeout(() => {
         feedback.textContent = '';
