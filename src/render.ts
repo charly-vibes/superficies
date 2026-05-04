@@ -1,14 +1,17 @@
-import { archetypeContent } from './data';
-import { getExportText, type ExportTab } from './export';
-import type { CatalogState } from './types';
+import { archetypeContent, presets } from './data.ts';
+import { getExportText, type ExportTab } from './export.ts';
+import type { CatalogState } from './types.ts';
 
 export function renderApp(target: HTMLElement, state: CatalogState): void {
   const content = archetypeContent[state.archetype];
   const appMode = state.mode;
   const exportText = getExportText(state, 'full');
+  const presetStatus = state.departedFromPreset
+    ? `Custom from ${presets[state.preset].label}`
+    : presets[state.preset].label;
 
   target.innerHTML = `
-    <div class="shell" data-mode="${appMode}">
+    <div class="shell" data-mode="${appMode}" data-typography="${state.live.typography}" data-color="${state.live.color}" data-spacing="${state.live.spacing}" data-density="${state.live.density}" data-radius="${state.live.radius}" data-surface="${state.live.surface}">
       <header class="topbar">
         <div>
           <p class="kicker">superficies</p>
@@ -16,21 +19,78 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
         </div>
         <div class="actions">
           <label>
+            <span>Preset</span>
+            <select name="preset">
+              ${Object.values(presets)
+                .map((preset) => option(preset.id, preset.label, state.preset))
+                .join('')}
+            </select>
+          </label>
+          <label>
             <span>Archetype</span>
             <select name="archetype">
-              <option value="saas" ${state.archetype === 'saas' ? 'selected' : ''}>SaaS</option>
-              <option value="restaurant" ${state.archetype === 'restaurant' ? 'selected' : ''}>Restaurant</option>
-              <option value="editorial" ${state.archetype === 'editorial' ? 'selected' : ''}>Editorial</option>
+              ${option('saas', 'SaaS', state.archetype)}
+              ${option('restaurant', 'Restaurant', state.archetype)}
+              ${option('editorial', 'Editorial', state.archetype)}
             </select>
           </label>
           <label>
             <span>Mode</span>
             <select name="mode">
-              <option value="light" ${state.mode === 'light' ? 'selected' : ''}>Light</option>
-              <option value="dark" ${state.mode === 'dark' ? 'selected' : ''}>Dark</option>
-              <option value="both" ${state.mode === 'both' ? 'selected' : ''}>Both</option>
+              ${option('light', 'Light', state.mode)}
+              ${option('dark', 'Dark', state.mode)}
+              ${option('both', 'Both', state.mode)}
             </select>
           </label>
+          <label>
+            <span>Typography</span>
+            <select name="typography">
+              ${option('chunky', 'Chunky', state.live.typography)}
+              ${option('system', 'System', state.live.typography)}
+              ${option('serif', 'Serif', state.live.typography)}
+            </select>
+          </label>
+          <label>
+            <span>Color</span>
+            <select name="color">
+              ${option('acid', 'Acid', state.live.color)}
+              ${option('sky', 'Sky', state.live.color)}
+              ${option('sepia', 'Sepia', state.live.color)}
+            </select>
+          </label>
+          <label>
+            <span>Spacing</span>
+            <select name="spacing">
+              ${option('tight', 'Tight', state.live.spacing)}
+              ${option('balanced', 'Balanced', state.live.spacing)}
+              ${option('loose', 'Loose', state.live.spacing)}
+            </select>
+          </label>
+          <label>
+            <span>Density</span>
+            <select name="density">
+              ${option('compact', 'Compact', state.live.density)}
+              ${option('comfortable', 'Comfortable', state.live.density)}
+              ${option('roomy', 'Roomy', state.live.density)}
+            </select>
+          </label>
+          <label>
+            <span>Radius</span>
+            <select name="radius">
+              ${option('sharp', 'Sharp', state.live.radius)}
+              ${option('soft', 'Soft', state.live.radius)}
+              ${option('pill', 'Pill', state.live.radius)}
+            </select>
+          </label>
+          <label>
+            <span>Surface</span>
+            <select name="surface">
+              ${option('flat', 'Flat', state.live.surface)}
+              ${option('outlined', 'Outlined', state.live.surface)}
+              ${option('elevated', 'Elevated', state.live.surface)}
+            </select>
+          </label>
+          <p class="preset-status" aria-live="polite">${presetStatus}</p>
           <button type="button" data-export-open>Export</button>
         </div>
       </header>
@@ -143,6 +203,10 @@ export function attachExportInteractions(target: HTMLElement, state: CatalogStat
       feedback.textContent = 'Copy unavailable.';
     }
   });
+}
+
+function option(value: string, label: string, selectedValue: string): string {
+  return `<option value="${value}" ${selectedValue === value ? 'selected' : ''}>${label}</option>`;
 }
 
 function escapeHtml(value: string): string {

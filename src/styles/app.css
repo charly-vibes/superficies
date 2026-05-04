@@ -192,6 +192,75 @@ button:disabled {
   color: var(--muted);
 }
 
+.shell[data-typography='chunky'] {
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.shell[data-typography='serif'] {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.shell[data-color='sky'] {
+  --bg: oklch(96% 0.03 230);
+  --accent: oklch(72% 0.13 235);
+  --accent-ink: oklch(18% 0.04 250);
+}
+
+.shell[data-color='sepia'] {
+  --bg: oklch(94% 0.04 75);
+  --accent: oklch(62% 0.12 55);
+  --accent-ink: oklch(98% 0.01 85);
+}
+
+.shell[data-spacing='tight'] .preview-grid,
+.shell[data-spacing='tight'] .actions,
+.shell[data-density='compact'] .actions {
+  gap: 0.5rem;
+}
+
+.shell[data-spacing='loose'] .preview-grid,
+.shell[data-spacing='loose'] .actions,
+.shell[data-density='roomy'] .actions {
+  gap: 1.5rem;
+}
+
+.shell[data-density='compact'] .zone,
+.shell[data-density='compact'] .topbar {
+  padding: 0.8rem;
+}
+
+.shell[data-density='roomy'] .zone,
+.shell[data-density='roomy'] .topbar {
+  padding: 1.6rem;
+}
+
+.shell[data-radius='sharp'] button,
+.shell[data-radius='sharp'] select,
+.shell[data-radius='sharp'] .zone,
+.shell[data-radius='sharp'] .export-panel,
+.shell[data-radius='sharp'] .chip,
+.shell[data-radius='sharp'] .specimen-card,
+.shell[data-radius='sharp'] .token-grid article {
+  border-radius: 0.1rem;
+}
+
+.shell[data-radius='pill'] button,
+.shell[data-radius='pill'] select,
+.shell[data-radius='pill'] .chip {
+  border-radius: 999px;
+}
+
+.shell[data-surface='flat'] button,
+.shell[data-surface='flat'] select,
+.shell[data-surface='flat'] .zone,
+.shell[data-surface='flat'] .export-panel {
+  box-shadow: none;
+}
+
+.shell[data-surface='elevated'] {
+  --shadow: 0 18px 45px rgb(20 20 20 / 0.16);
+}
+
 .shell[data-mode='dark'] {
   --bg: oklch(18% 0.02 255);
   --panel: oklch(24% 0.02 255);

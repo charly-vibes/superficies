@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "test": "node --experimental-specifier-resolution=node --test src/**/*.test.ts",
     "check": "tsc --noEmit",
-    "build": "npm run check && vite build",
+    "build": "npm run test && npm run check && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {

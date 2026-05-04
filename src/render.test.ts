@@ -1,0 +1,31 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+
+import { presets } from './data.ts';
+import { renderApp } from './render.ts';
+import { defaultState } from './state.ts';
+
+test('renderApp exposes preset and independently editable live controls', () => {
+  const target = { innerHTML: '' };
+
+  renderApp(target as HTMLElement, { ...defaultState, departedFromPreset: true });
+
+  assert.match(target.innerHTML, /name="preset"/);
+  assert.match(target.innerHTML, /name="typography"/);
+  assert.match(target.innerHTML, /name="color"/);
+  assert.match(target.innerHTML, /name="spacing"/);
+  assert.match(target.innerHTML, /name="density"/);
+  assert.match(target.innerHTML, /name="radius"/);
+  assert.match(target.innerHTML, /name="surface"/);
+  assert.match(target.innerHTML, /Custom from Neobrutalist/);
+});
+
+test('renderApp includes all curated preset options', () => {
+  const target = { innerHTML: '' };
+
+  renderApp(target as HTMLElement, defaultState);
+
+  for (const preset of Object.values(presets)) {
+    assert.match(target.innerHTML, new RegExp(`>${preset.label}<`));
+  }
+});

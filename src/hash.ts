@@ -1,32 +1,149 @@
-import { defaultState } from './state';
-import type { Archetype, CatalogState, Mode } from './types';
+import { defaultState } from './state.ts';
+import type {
+  Archetype,
+  CatalogState,
+  Colorway,
+  Density,
+  Mode,
+  Preset,
+  Radius,
+  Spacing,
+  Surface,
+  Typography,
+} from './types.ts';
 
-const archetypes: Archetype[] = ['saas', 'restaurant', 'editorial'];
-const modes: Mode[] = ['light', 'dark', 'both'];
+const presetAliases = {
+  neobrutalist: 'n',
+  softSaas: 's',
+  warmEditorial: 'w',
+} as const satisfies Record<Preset, string>;
+
+const archetypeAliases = {
+  saas: 's',
+  restaurant: 'r',
+  editorial: 'e',
+} as const satisfies Record<Archetype, string>;
+
+const modeAliases = {
+  light: 'l',
+  dark: 'd',
+  both: 'b',
+} as const satisfies Record<Mode, string>;
+
+const typographyAliases = {
+  chunky: 'c',
+  system: 's',
+  serif: 'f',
+} as const satisfies Record<Typography, string>;
+
+const colorAliases = {
+  acid: 'a',
+  sky: 's',
+  sepia: 'p',
+} as const satisfies Record<Colorway, string>;
+
+const spacingAliases = {
+  tight: 't',
+  balanced: 'b',
+  loose: 'l',
+} as const satisfies Record<Spacing, string>;
+
+const densityAliases = {
+  compact: 'c',
+  comfortable: 'm',
+  roomy: 'r',
+} as const satisfies Record<Density, string>;
+
+const radiusAliases = {
+  sharp: 'h',
+  soft: 's',
+  pill: 'p',
+} as const satisfies Record<Radius, string>;
+
+const surfaceAliases = {
+  flat: 'f',
+  outlined: 'o',
+  elevated: 'e',
+} as const satisfies Record<Surface, string>;
 
 export function readStateFromHash(hash: string): CatalogState {
   const params = new URLSearchParams(hash.replace(/^#/, ''));
-  const archetype = params.get('a');
-  const mode = params.get('m');
+
+  if (!params.has('p') && !params.has('a') && !params.has('m')) {
+    return defaultState;
+  }
+
+  const preset = decodeAlias(params.get('p'), presetAliases);
+  const archetype = decodeAlias(params.get('a'), archetypeAliases);
+  const mode = decodeAlias(params.get('m'), modeAliases);
+  const typography = decodeAlias(params.get('ty'), typographyAliases);
+  const color = decodeAlias(params.get('co'), colorAliases);
+  const spacing = decodeAlias(params.get('sp'), spacingAliases);
+  const density = decodeAlias(params.get('de'), densityAliases);
+  const radius = decodeAlias(params.get('ra'), radiusAliases);
+  const surface = decodeAlias(params.get('su'), surfaceAliases);
+  const departedFromPreset = decodeBoolean(params.get('cu'));
+
+  if (
+    !preset ||
+    !archetype ||
+    !mode ||
+    !typography ||
+    !color ||
+    !spacing ||
+    !density ||
+    !radius ||
+    !surface ||
+    departedFromPreset === null
+  ) {
+    return defaultState;
+  }
 
   return {
-    preset: 'neobrutalist',
-    archetype: isArchetype(archetype) ? archetype : defaultState.archetype,
-    mode: isMode(mode) ? mode : defaultState.mode,
+    preset,
+    archetype,
+    mode,
+    live: { typography, color, spacing, density, radius, surface },
+    departedFromPreset,
   };
 }
 
 export function writeStateToHash(state: CatalogState): string {
   const params = new URLSearchParams();
-  params.set('a', state.archetype);
-  params.set('m', state.mode);
+  params.set('p', presetAliases[state.preset]);
+  params.set('a', archetypeAliases[state.archetype]);
+  params.set('m', modeAliases[state.mode]);
+  params.set('ty', typographyAliases[state.live.typography]);
+  params.set('co', colorAliases[state.live.color]);
+  params.set('sp', spacingAliases[state.live.spacing]);
+  params.set('de', densityAliases[state.live.density]);
+  params.set('ra', radiusAliases[state.live.radius]);
+  params.set('su', surfaceAliases[state.live.surface]);
+  params.set('cu', state.departedFromPreset ? '1' : '0');
   return `#${params.toString()}`;
 }
 
-function isArchetype(value: string | null): value is Archetype {
-  return value !== null && archetypes.includes(value as Archetype);
+function decodeAlias<T extends string>(
+  value: string | null,
+  aliases: Record<T, string>,
+): T | null {
+  if (value === null) {
+    return null;
+  }
+
+  const match = Object.entries<string>(aliases).find(
+    ([name, alias]) => value === alias || value === name,
+  );
+
+  return match ? (match[0] as T) : null;
 }
 
-function isMode(value: string | null): value is Mode {
-  return value !== null && modes.includes(value as Mode);
+function decodeBoolean(value: string | null): boolean | null {
+  if (value === '1' || value === 'true') {
+    return true;
+  }
+  if (value === '0' || value === 'false') {
+    return false;
+  }
+  return null;
 }

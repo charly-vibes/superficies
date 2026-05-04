@@ -1,9 +1,9 @@
 import './styles/app.css';
 
-import { readStateFromHash, writeStateToHash } from './hash';
-import { attachExportInteractions, renderApp } from './render';
-import { defaultState, mergeState } from './state';
-import type { Archetype, CatalogState, Mode } from './types';
+import { createCatalogController, type StateUpdate } from './app.ts';
+import { attachExportInteractions, renderApp } from './render.ts';
+import { applyPreset, updateLiveDimension } from './state.ts';
+import type { Archetype, LiveDimensionKey, Mode, Preset } from './types.ts';
 
 const target = document.querySelector<HTMLElement>('#app');
 
@@ -12,45 +12,46 @@ if (!target) {
 }
 
 const appRoot = target;
-
-let state = initializeState();
-commit(state);
-
-window.addEventListener('hashchange', () => {
-  state = readStateFromHash(window.location.hash);
-  commit(state, false);
+const controller = createCatalogController({
+  getHash: () => window.location.hash,
+  replaceHash: (hash) => history.replaceState(null, '', hash),
+  render: (state) => renderApp(appRoot, state),
+  attachExportInteractions: (state) => attachExportInteractions(appRoot, state),
+  bindControls: (onPatch) => bindControls(appRoot, onPatch),
 });
 
-function initializeState(): CatalogState {
-  const next = readStateFromHash(window.location.hash);
-  return next.preset ? next : defaultState;
-}
+controller.initialize();
+window.addEventListener('hashchange', () => controller.onHashChange());
 
-function commit(nextState: CatalogState, syncHash = true): void {
-  state = nextState;
-  renderApp(appRoot, state);
-  attachExportInteractions(appRoot, state);
-  bindControls();
+function bindControls(target: HTMLElement, onPatch: (patch: StateUpdate) => void): void {
+  const presetSelect = target.querySelector<HTMLSelectElement>('select[name="preset"]');
+  const archetypeSelect = target.querySelector<HTMLSelectElement>('select[name="archetype"]');
+  const modeSelect = target.querySelector<HTMLSelectElement>('select[name="mode"]');
+  const liveControls = target.querySelectorAll<HTMLSelectElement>(
+    'select[name="typography"], select[name="color"], select[name="spacing"], select[name="density"], select[name="radius"], select[name="surface"]',
+  );
 
-  if (syncHash) {
-    const nextHash = writeStateToHash(state);
-    if (window.location.hash !== nextHash) {
-      history.replaceState(null, '', nextHash);
-    }
-  }
-}
-
-function bindControls(): void {
-  const archetypeSelect = appRoot.querySelector<HTMLSelectElement>('select[name="archetype"]');
-  const modeSelect = appRoot.querySelector<HTMLSelectElement>('select[name="mode"]');
+  presetSelect?.addEventListener('change', (event) => {
+    const value = (event.currentTarget as HTMLSelectElement).value as Preset;
+    onPatch((current) => applyPreset(value, current));
+  });
 
   archetypeSelect?.addEventListener('change', (event) => {
     const value = (event.currentTarget as HTMLSelectElement).value as Archetype;
-    commit(mergeState({ archetype: value }, state));
+    onPatch({ archetype: value });
   });
 
   modeSelect?.addEventListener('change', (event) => {
     const value = (event.currentTarget as HTMLSelectElement).value as Mode;
-    commit(mergeState({ mode: value }, state));
+    onPatch({ mode: value });
+  });
+
+  liveControls.forEach((control) => {
+    control.addEventListener('change', (event) => {
+      const element = event.currentTarget as HTMLSelectElement;
+      onPatch((current) =>
+        updateLiveDimension(element.name as LiveDimensionKey, element.value as never, current),
+      );
+    });
   });
 }

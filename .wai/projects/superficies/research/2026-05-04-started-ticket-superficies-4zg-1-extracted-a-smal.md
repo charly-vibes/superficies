@@ -1,0 +1,1 @@
+Started ticket superficies-4zg.1: extracted a small catalog controller so state commits rerender, rebind controls, and sync the URL hash deterministically; added node:test coverage for hash round-trips, default fallback, invalid-hash recovery, and commit-driven hash synchronization.

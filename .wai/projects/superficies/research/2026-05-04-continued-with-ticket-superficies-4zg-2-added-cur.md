@@ -1,0 +1,1 @@
+Continued with ticket superficies-4zg.2: added curated preset definitions, live dimension state, preset application/reset semantics, departure tracking, compact hash support for new live fields, UI controls for preset/typography/color/spacing/density/radius/surface, and CSS data-attribute restyling. Verified with npm test, npm run check, and npm run build.

@@ -1,5 +1,5 @@
-import { archetypeContent } from './data';
-import type { CatalogState } from './types';
+import { archetypeContent } from './data.ts';
+import type { CatalogState } from './types.ts';
 
 export type ExportTab = 'full' | 'minimum' | 'tokens';
 
