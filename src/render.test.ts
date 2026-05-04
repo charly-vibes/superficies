@@ -88,6 +88,25 @@ test('renderApp export workspace includes all artifact tabs and copy feedback re
   assert.match(target.innerHTML, /copy-feedback" aria-live="polite"/);
 });
 
+test('renderApp exposes export-only context controls', () => {
+  const target = { innerHTML: '' };
+
+  renderApp(target as HTMLElement, defaultState);
+
+  for (const name of [
+    'audience',
+    'jobsToBeDone',
+    'antiReferences',
+    'motionIntent',
+    'accessibilityLevel',
+    'contentSample',
+    'antiDefaults',
+    'exportFormat',
+  ]) {
+    assert.match(target.innerHTML, new RegExp(`name="${name}"`));
+  }
+});
+
 test('renderApp escapes user-provided content overrides before injecting markup', () => {
   const target = { innerHTML: '' };
 

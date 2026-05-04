@@ -201,6 +201,43 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
             </div>
             <button value="cancel" class="secondary">Close</button>
           </div>
+          <div class="export-context-grid">
+            <label>
+              <span>Audience</span>
+              <input name="audience" value="${escapeAttribute(state.exportContext.audience)}" />
+            </label>
+            <label>
+              <span>Jobs to be done</span>
+              <textarea name="jobsToBeDone">${escapeHtml(state.exportContext.jobsToBeDone)}</textarea>
+            </label>
+            <label>
+              <span>Anti-references</span>
+              <textarea name="antiReferences">${escapeHtml(state.exportContext.antiReferences)}</textarea>
+            </label>
+            <label>
+              <span>Motion intent</span>
+              <input name="motionIntent" value="${escapeAttribute(state.exportContext.motionIntent)}" />
+            </label>
+            <label>
+              <span>Accessibility level</span>
+              <input name="accessibilityLevel" value="${escapeAttribute(state.exportContext.accessibilityLevel)}" />
+            </label>
+            <label>
+              <span>Content sample</span>
+              <textarea name="contentSample">${escapeHtml(state.exportContext.contentSample)}</textarea>
+            </label>
+            <label>
+              <span>Anti-defaults</span>
+              <textarea name="antiDefaults">${escapeHtml(state.exportContext.antiDefaults)}</textarea>
+            </label>
+            <label>
+              <span>Full brief format</span>
+              <select name="exportFormat">
+                ${option('xml', 'XML', state.exportContext.exportFormat)}
+                ${option('markdown', 'Markdown', state.exportContext.exportFormat)}
+              </select>
+            </label>
+          </div>
           <div class="tab-row">
             ${exportArtifacts
               .map(

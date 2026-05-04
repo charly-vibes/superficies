@@ -33,6 +33,21 @@ export interface HeroContent {
 export type HeroOverrideKey = 'eyebrow' | 'title' | 'copy' | 'cta' | 'body';
 export type ContentOverrides = Record<HeroOverrideKey, string | null>;
 
+export type ExportFormat = 'xml' | 'markdown';
+
+export interface ExportContext {
+  audience: string;
+  jobsToBeDone: string;
+  antiReferences: string;
+  motionIntent: string;
+  accessibilityLevel: string;
+  contentSample: string;
+  antiDefaults: string;
+  exportFormat: ExportFormat;
+}
+
+export type ExportContextKey = keyof ExportContext;
+
 export interface CatalogState {
   preset: Preset;
   archetype: Archetype;
@@ -41,6 +56,7 @@ export interface CatalogState {
   live: LiveDimensions;
   departedFromPreset: boolean;
   contentOverrides: ContentOverrides;
+  exportContext: ExportContext;
 }
 
 export interface PresetDefinition {

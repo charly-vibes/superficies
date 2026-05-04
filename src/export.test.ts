@@ -48,6 +48,45 @@ test('listExportArtifacts exposes the three required tabs in stable order', () =
   assert.equal(artifacts[0].content, getExportText(defaultState, 'full'));
 });
 
+test('getExportText full brief supports XML and Markdown wrappers with semantic parity', () => {
+  const xmlState: CatalogState = {
+    ...defaultState,
+    exportContext: {
+      ...defaultState.exportContext,
+      audience: 'independent bookstores',
+      jobsToBeDone: 'launch a high-converting seasonal catalog',
+      antiReferences: 'generic dashboard chrome',
+      motionIntent: 'quiet page transitions only',
+      accessibilityLevel: 'WCAG 2.2 AAA where practical',
+      contentSample: 'Rare editions, staff picks, and pickup windows',
+      antiDefaults: 'no blue SaaS gradients',
+      exportFormat: 'xml',
+    },
+  };
+  const markdownState: CatalogState = {
+    ...xmlState,
+    exportContext: { ...xmlState.exportContext, exportFormat: 'markdown' },
+  };
+
+  const xml = getExportText(xmlState, 'full');
+  const markdown = getExportText(markdownState, 'full');
+
+  for (const value of [
+    'independent bookstores',
+    'launch a high-converting seasonal catalog',
+    'generic dashboard chrome',
+    'quiet page transitions only',
+    'WCAG 2.2 AAA where practical',
+    'Rare editions, staff picks, and pickup windows',
+    'no blue SaaS gradients',
+  ]) {
+    assert.match(xml, new RegExp(value));
+    assert.match(markdown, new RegExp(value));
+  }
+  assert.match(xml, /^<design-brief>/);
+  assert.match(markdown, /^# Design brief/);
+});
+
 test('getExportArtifact returns deterministic tab-specific content from current state', () => {
   const state: CatalogState = {
     ...defaultState,

@@ -2,8 +2,8 @@ import './styles/app.css';
 
 import { createCatalogController, type StateUpdate } from './app.ts';
 import { attachExportInteractions, renderApp } from './render.ts';
-import { applyPreset, updateContentOverride, updateLiveDimension } from './state.ts';
-import type { Archetype, HeroLayout, HeroOverrideKey, LiveDimensionKey, Mode, Preset } from './types.ts';
+import { applyPreset, updateContentOverride, updateExportContext, updateLiveDimension } from './state.ts';
+import type { Archetype, ExportContextKey, ExportFormat, HeroLayout, HeroOverrideKey, LiveDimensionKey, Mode, Preset } from './types.ts';
 
 const target = document.querySelector<HTMLElement>('#app');
 
@@ -29,6 +29,10 @@ function bindControls(target: HTMLElement, onPatch: (patch: StateUpdate) => void
   const modeSelect = target.querySelector<HTMLSelectElement>('select[name="mode"]');
   const heroLayoutSelect = target.querySelector<HTMLSelectElement>('select[name="heroLayout"]');
   const contentControls = target.querySelectorAll<HTMLInputElement>('input[name="title"], input[name="copy"]');
+  const exportTextControls = target.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+    'input[name="audience"], textarea[name="jobsToBeDone"], textarea[name="antiReferences"], input[name="motionIntent"], input[name="accessibilityLevel"], textarea[name="contentSample"], textarea[name="antiDefaults"]',
+  );
+  const exportFormatSelect = target.querySelector<HTMLSelectElement>('select[name="exportFormat"]');
   const liveControls = target.querySelectorAll<HTMLSelectElement>(
     'select[name="typography"], select[name="color"], select[name="spacing"], select[name="density"], select[name="radius"], select[name="surface"]',
   );
@@ -60,6 +64,20 @@ function bindControls(target: HTMLElement, onPatch: (patch: StateUpdate) => void
         updateContentOverride(element.name as HeroOverrideKey, element.value, current),
       );
     });
+  });
+
+  exportTextControls.forEach((control) => {
+    control.addEventListener('change', (event) => {
+      const element = event.currentTarget as HTMLInputElement | HTMLTextAreaElement;
+      onPatch((current) =>
+        updateExportContext(element.name as ExportContextKey, element.value, current),
+      );
+    });
+  });
+
+  exportFormatSelect?.addEventListener('change', (event) => {
+    const value = (event.currentTarget as HTMLSelectElement).value as ExportFormat;
+    onPatch((current) => updateExportContext('exportFormat', value, current));
   });
 
   liveControls.forEach((control) => {

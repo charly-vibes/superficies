@@ -22,6 +22,17 @@ test('readStateFromHash round-trips valid supported fields', () => {
     mode: 'light',
     live: { ...defaultState.live, density: 'compact', radius: 'pill' },
     departedFromPreset: true,
+    exportContext: {
+      ...defaultState.exportContext,
+      audience: 'municipal teams',
+      jobsToBeDone: 'explain permit status clearly',
+      antiReferences: 'opaque enterprise portals',
+      motionIntent: 'reduced motion first',
+      accessibilityLevel: 'WCAG 2.2 AAA',
+      contentSample: 'Permit 4421 is ready for review',
+      antiDefaults: 'avoid gray admin tables',
+      exportFormat: 'markdown',
+    },
   };
 
   assert.deepEqual(readStateFromHash(writeStateToHash(original)), original);

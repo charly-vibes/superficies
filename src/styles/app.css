@@ -23,13 +23,15 @@ body {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 
 button,
 input,
 select,
+textarea,
 .zone,
 .export-panel {
   border: 2px solid var(--border);
@@ -39,10 +41,16 @@ select,
 
 button,
 input,
-select {
+select,
+textarea {
   background: var(--panel);
   color: var(--ink);
   padding: 0.7rem 1rem;
+}
+
+textarea {
+  min-height: 4.5rem;
+  resize: vertical;
 }
 
 button {
@@ -337,6 +345,19 @@ button:disabled {
   flex-wrap: wrap;
 }
 
+.export-context-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+
+.export-context-grid label {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 .tab-row button.is-active {
   background: var(--accent);
   color: var(--accent-ink);
@@ -401,6 +422,7 @@ button:disabled {
 .shell[data-radius='sharp'] button,
 .shell[data-radius='sharp'] input,
 .shell[data-radius='sharp'] select,
+.shell[data-radius='sharp'] textarea,
 .shell[data-radius='sharp'] .zone,
 .shell[data-radius='sharp'] .export-panel,
 .shell[data-radius='sharp'] .chip,
@@ -419,6 +441,7 @@ button:disabled {
 .shell[data-surface='flat'] button,
 .shell[data-surface='flat'] input,
 .shell[data-surface='flat'] select,
+.shell[data-surface='flat'] textarea,
 .shell[data-surface='flat'] .zone,
 .shell[data-surface='flat'] .export-panel {
   box-shadow: none;

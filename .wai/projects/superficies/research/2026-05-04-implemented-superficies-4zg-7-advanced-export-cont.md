@@ -1,0 +1,1 @@
+Implemented superficies-4zg.7 advanced export context: added export-only state fields, URL hash serialization, XML/Markdown full-brief wrappers, export context controls, and tests for semantic parity plus preview-style isolation. Verified npm test, npm run check, npm run build, and openspec validate --specs --strict.

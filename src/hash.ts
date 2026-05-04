@@ -9,6 +9,7 @@ import type {
   Preset,
   Radius,
   Spacing,
+  ExportFormat,
   Surface,
   Typography,
 } from './types.ts';
@@ -74,6 +75,11 @@ const surfaceAliases = {
   elevated: 'e',
 } as const satisfies Record<Surface, string>;
 
+const exportFormatAliases = {
+  xml: 'x',
+  markdown: 'md',
+} as const satisfies Record<ExportFormat, string>;
+
 export function readStateFromHash(hash: string): CatalogState {
   const params = new URLSearchParams(hash.replace(/^#/, ''));
 
@@ -92,6 +98,7 @@ export function readStateFromHash(hash: string): CatalogState {
   const radius = decodeAlias(params.get('ra'), radiusAliases);
   const surface = decodeAlias(params.get('su'), surfaceAliases);
   const departedFromPreset = decodeBoolean(params.get('cu'));
+  const exportFormat = decodeAlias(params.get('ef') ?? exportFormatAliases.xml, exportFormatAliases);
 
   if (
     !preset ||
@@ -104,7 +111,8 @@ export function readStateFromHash(hash: string): CatalogState {
     !density ||
     !radius ||
     !surface ||
-    departedFromPreset === null
+    departedFromPreset === null ||
+    !exportFormat
   ) {
     return defaultState;
   }
@@ -122,6 +130,17 @@ export function readStateFromHash(hash: string): CatalogState {
       copy: params.get('cp'),
       cta: params.get('ct'),
       body: params.get('bo'),
+    },
+    exportContext: {
+      ...defaultState.exportContext,
+      audience: params.get('ea') ?? defaultState.exportContext.audience,
+      jobsToBeDone: params.get('ej') ?? defaultState.exportContext.jobsToBeDone,
+      antiReferences: params.get('er') ?? defaultState.exportContext.antiReferences,
+      motionIntent: params.get('em') ?? defaultState.exportContext.motionIntent,
+      accessibilityLevel: params.get('el') ?? defaultState.exportContext.accessibilityLevel,
+      contentSample: params.get('ec') ?? defaultState.exportContext.contentSample,
+      antiDefaults: params.get('ed') ?? defaultState.exportContext.antiDefaults,
+      exportFormat,
     },
   };
 }
@@ -144,11 +163,25 @@ export function writeStateToHash(state: CatalogState): string {
   setOptionalParam(params, 'cp', state.contentOverrides.copy);
   setOptionalParam(params, 'ct', state.contentOverrides.cta);
   setOptionalParam(params, 'bo', state.contentOverrides.body);
+  setChangedParam(params, 'ea', state.exportContext.audience, defaultState.exportContext.audience);
+  setChangedParam(params, 'ej', state.exportContext.jobsToBeDone, defaultState.exportContext.jobsToBeDone);
+  setChangedParam(params, 'er', state.exportContext.antiReferences, defaultState.exportContext.antiReferences);
+  setChangedParam(params, 'em', state.exportContext.motionIntent, defaultState.exportContext.motionIntent);
+  setChangedParam(params, 'el', state.exportContext.accessibilityLevel, defaultState.exportContext.accessibilityLevel);
+  setChangedParam(params, 'ec', state.exportContext.contentSample, defaultState.exportContext.contentSample);
+  setChangedParam(params, 'ed', state.exportContext.antiDefaults, defaultState.exportContext.antiDefaults);
+  setChangedParam(params, 'ef', exportFormatAliases[state.exportContext.exportFormat], exportFormatAliases[defaultState.exportContext.exportFormat]);
   return `#${params.toString()}`;
 }
 
 function setOptionalParam(params: URLSearchParams, key: string, value: string | null): void {
   if (value) {
+    params.set(key, value);
+  }
+}
+
+function setChangedParam(params: URLSearchParams, key: string, value: string, defaultValue: string): void {
+  if (value && value !== defaultValue) {
     params.set(key, value);
   }
 }

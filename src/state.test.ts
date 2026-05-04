@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import { presets } from './data.ts';
-import { applyPreset, defaultState, updateLiveDimension } from './state.ts';
+import { applyPreset, defaultState, updateExportContext, updateLiveDimension } from './state.ts';
 
 test('default state starts from the neobrutalist preset dimensions', () => {
   assert.deepEqual(defaultState.live, presets.neobrutalist.live);
@@ -27,4 +27,13 @@ test('manual edits mark state as custom while preserving preset provenance', () 
   assert.equal(next.preset, 'neobrutalist');
   assert.equal(next.departedFromPreset, true);
   assert.equal(next.live.density, 'compact');
+});
+
+test('export-only context edits do not restyle preview dimensions', () => {
+  const next = updateExportContext('audience', 'boutique hotels', defaultState);
+
+  assert.equal(next.exportContext.audience, 'boutique hotels');
+  assert.equal(next.preset, defaultState.preset);
+  assert.deepEqual(next.live, defaultState.live);
+  assert.equal(next.departedFromPreset, defaultState.departedFromPreset);
 });
