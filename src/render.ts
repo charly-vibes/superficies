@@ -1,10 +1,12 @@
 import { presets } from './data.ts';
 import { getExportText, type ExportTab } from './export.ts';
 import { resolveHeroContent } from './state.ts';
+import { deriveDesignTokens, type DesignTokens } from './tokens.ts';
 import type { CatalogState } from './types.ts';
 
 export function renderApp(target: HTMLElement, state: CatalogState): void {
   const content = resolveHeroContent(state);
+  const tokens = deriveDesignTokens(state);
   const appMode = state.mode;
   const exportText = getExportText(state, 'full');
   const presetStatus = state.departedFromPreset
@@ -116,15 +118,15 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
       <main class="preview-grid">
         <section class="zone hero-zone">
           <p class="zone-label">Hero zone</p>
-          <p class="eyebrow">${content.eyebrow}</p>
-          <h2>${content.title}</h2>
-          <p>${content.copy}</p>
-          <p class="hero-body">${content.body}</p>
+          <p class="eyebrow">${escapeHtml(content.eyebrow)}</p>
+          <h2>${escapeHtml(content.title)}</h2>
+          <p>${escapeHtml(content.copy)}</p>
+          <p class="hero-body">${escapeHtml(content.body)}</p>
           <ul class="feature-list">
-            ${content.features.map((feature) => `<li>${feature}</li>`).join('')}
+            ${content.features.map((feature) => `<li>${escapeHtml(feature)}</li>`).join('')}
           </ul>
           <div class="hero-actions">
-            <button type="button">${content.cta}</button>
+            <button type="button">${escapeHtml(content.cta)}</button>
             <button type="button" class="secondary">Compare tokens</button>
           </div>
         </section>
@@ -185,20 +187,7 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
 
         <section class="zone token-zone">
           <p class="zone-label">Token panel</p>
-          <div class="token-grid">
-            <article>
-              <h3>Typography</h3>
-              <p>Display / Body / Caption</p>
-            </article>
-            <article>
-              <h3>Color</h3>
-              <p>Surface / Ink / Accent</p>
-            </article>
-            <article>
-              <h3>Spacing</h3>
-              <p>4 / 8 / 16 / 24 / 32</p>
-            </article>
-          </div>
+          ${renderTokenPanel(tokens)}
         </section>
       </main>
 
@@ -267,8 +256,67 @@ export function attachExportInteractions(target: HTMLElement, state: CatalogStat
   });
 }
 
+function renderTokenPanel(tokens: DesignTokens): string {
+  return `
+    <div class="token-grid">
+      <article>
+        <h3>Typography</h3>
+        <p class="token-meta">${escapeHtml(tokens.typography.family)}</p>
+        <dl class="token-list">
+          ${tokens.typography.ladder
+            .map(
+              (step) => `
+                <div>
+                  <dt>${escapeHtml(step.name)}</dt>
+                  <dd><span style="font-size: ${escapeAttribute(step.size)}; line-height: ${escapeAttribute(step.lineHeight)}">${escapeHtml(step.sample)}</span></dd>
+                  <dd>${escapeHtml(step.size)} / ${escapeHtml(step.lineHeight)}</dd>
+                </div>`,
+            )
+            .join('')}
+        </dl>
+      </article>
+      <article>
+        <h3>Color</h3>
+        <dl class="token-list">
+          ${tokens.color.semantic
+            .map(
+              (swatch) => `
+                <div class="color-token">
+                  <dt><span class="swatch" style="background: ${escapeAttribute(swatch.hex)}"></span>${escapeHtml(swatch.name)}</dt>
+                  <dd>${escapeHtml(swatch.oklch)}</dd>
+                  <dd>${escapeHtml(swatch.hex)}</dd>
+                </div>`,
+            )
+            .join('')}
+        </dl>
+        <h4>Contrast</h4>
+        <ul class="contrast-list">
+          ${tokens.color.contrastPairs
+            .map(
+              (pair) => `
+                <li>
+                  <strong>${escapeHtml(pair.name)}</strong>
+                  <span>${pair.ratio.toFixed(2)}:1</span>
+                  <span>${pair.passesAA ? 'AA pass' : 'AA fail'}</span>
+                </li>`,
+            )
+            .join('')}
+        </ul>
+      </article>
+      <article>
+        <h3>Spacing</h3>
+        <p>${tokens.spacing.scale.map(escapeHtml).join(' / ')}</p>
+        <h3>Radius</h3>
+        <p>${tokens.radius.scale.map(escapeHtml).join(' / ')}</p>
+        <h3>Shadow</h3>
+        <p>${tokens.shadow.scale.map(escapeHtml).join(' / ')}</p>
+      </article>
+    </div>
+  `;
+}
+
 function option(value: string, label: string, selectedValue: string): string {
-  return `<option value="${value}" ${selectedValue === value ? 'selected' : ''}>${label}</option>`;
+  return `<option value="${value}" ${selectedValue === value ? 'selected' : ''}>${escapeHtml(label)}</option>`;
 }
 
 function escapeAttribute(value: string): string {

@@ -252,6 +252,63 @@ button:disabled {
   flex: 1 1 12rem;
 }
 
+.token-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  word-break: break-word;
+}
+
+.token-list {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+}
+
+.token-list div,
+.contrast-list li {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.token-list dt {
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.token-list dd {
+  margin: 0;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.82rem;
+}
+
+.color-token dt {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.swatch {
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  display: inline-block;
+  height: 1rem;
+  width: 1rem;
+}
+
+.contrast-list {
+  display: grid;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.contrast-list li {
+  border-block-start: 1px solid color-mix(in oklch, var(--border), transparent 70%);
+  padding-block-start: 0.5rem;
+}
+
 .export-dialog {
   max-width: min(48rem, calc(100vw - 2rem));
   width: 100%;

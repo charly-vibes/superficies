@@ -1,10 +1,12 @@
-import { archetypeContent } from './data.ts';
+import { resolveHeroContent } from './state.ts';
+import { deriveDesignTokens } from './tokens.ts';
 import type { CatalogState } from './types.ts';
 
 export type ExportTab = 'full' | 'minimum' | 'tokens';
 
 export function getExportText(state: CatalogState, tab: ExportTab): string {
-  const content = archetypeContent[state.archetype].hero;
+  const content = resolveHeroContent(state);
+  const tokens = deriveDesignTokens(state);
 
   if (tab === 'minimum') {
     return [
@@ -20,14 +22,11 @@ export function getExportText(state: CatalogState, tab: ExportTab): string {
       {
         preset: state.preset,
         mode: state.mode,
-        color: {
-          surface: 'oklch(97% 0.03 95)',
-          ink: 'oklch(26% 0.03 260)',
-          accent: 'oklch(74% 0.18 85)',
-        },
-        spacing: ['0.25rem', '0.5rem', '1rem', '1.5rem', '2rem'],
-        radius: ['0.25rem', '0.75rem'],
-        shadow: ['4px 4px 0 rgb(20 20 20 / 0.85)'],
+        typography: tokens.typography,
+        color: tokens.color,
+        spacing: tokens.spacing,
+        radius: tokens.radius,
+        shadow: tokens.shadow,
       },
       null,
       2,
@@ -39,10 +38,19 @@ export function getExportText(state: CatalogState, tab: ExportTab): string {
     `  <preset>${state.preset}</preset>`,
     `  <archetype>${state.archetype}</archetype>`,
     `  <mode>${state.mode}</mode>`,
-    `  <eyebrow>${content.eyebrow}</eyebrow>`,
-    `  <headline>${content.title}</headline>`,
-    `  <body>${content.copy}</body>`,
+    `  <eyebrow>${escapeXml(content.eyebrow)}</eyebrow>`,
+    `  <headline>${escapeXml(content.title)}</headline>`,
+    `  <body>${escapeXml(content.copy)}</body>`,
     '  <preview-shell>hero, specimen-strip, token-panel</preview-shell>',
     '</design-brief>',
   ].join('\n');
+}
+
+function escapeXml(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&apos;');
 }
