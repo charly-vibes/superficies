@@ -4,6 +4,7 @@ import type {
   CatalogState,
   Colorway,
   Density,
+  HeroLayout,
   Mode,
   Preset,
   Radius,
@@ -29,6 +30,13 @@ const modeAliases = {
   dark: 'd',
   both: 'b',
 } as const satisfies Record<Mode, string>;
+
+const heroLayoutAliases = {
+  'hero+features': 'hf',
+  bento: 'be',
+  magazine: 'ma',
+  'sidebar+main': 'sm',
+} as const satisfies Record<HeroLayout, string>;
 
 const typographyAliases = {
   chunky: 'c',
@@ -76,6 +84,7 @@ export function readStateFromHash(hash: string): CatalogState {
   const preset = decodeAlias(params.get('p'), presetAliases);
   const archetype = decodeAlias(params.get('a'), archetypeAliases);
   const mode = decodeAlias(params.get('m'), modeAliases);
+  const heroLayout = decodeAlias(params.get('hl'), heroLayoutAliases);
   const typography = decodeAlias(params.get('ty'), typographyAliases);
   const color = decodeAlias(params.get('co'), colorAliases);
   const spacing = decodeAlias(params.get('sp'), spacingAliases);
@@ -88,6 +97,7 @@ export function readStateFromHash(hash: string): CatalogState {
     !preset ||
     !archetype ||
     !mode ||
+    !heroLayout ||
     !typography ||
     !color ||
     !spacing ||
@@ -103,8 +113,16 @@ export function readStateFromHash(hash: string): CatalogState {
     preset,
     archetype,
     mode,
+    heroLayout,
     live: { typography, color, spacing, density, radius, surface },
     departedFromPreset,
+    contentOverrides: {
+      eyebrow: params.get('ey'),
+      title: params.get('ti'),
+      copy: params.get('cp'),
+      cta: params.get('ct'),
+      body: params.get('bo'),
+    },
   };
 }
 
@@ -113,6 +131,7 @@ export function writeStateToHash(state: CatalogState): string {
   params.set('p', presetAliases[state.preset]);
   params.set('a', archetypeAliases[state.archetype]);
   params.set('m', modeAliases[state.mode]);
+  params.set('hl', heroLayoutAliases[state.heroLayout]);
   params.set('ty', typographyAliases[state.live.typography]);
   params.set('co', colorAliases[state.live.color]);
   params.set('sp', spacingAliases[state.live.spacing]);
@@ -120,7 +139,18 @@ export function writeStateToHash(state: CatalogState): string {
   params.set('ra', radiusAliases[state.live.radius]);
   params.set('su', surfaceAliases[state.live.surface]);
   params.set('cu', state.departedFromPreset ? '1' : '0');
+  setOptionalParam(params, 'ey', state.contentOverrides.eyebrow);
+  setOptionalParam(params, 'ti', state.contentOverrides.title);
+  setOptionalParam(params, 'cp', state.contentOverrides.copy);
+  setOptionalParam(params, 'ct', state.contentOverrides.cta);
+  setOptionalParam(params, 'bo', state.contentOverrides.body);
   return `#${params.toString()}`;
+}
+
+function setOptionalParam(params: URLSearchParams, key: string, value: string | null): void {
+  if (value) {
+    params.set(key, value);
+  }
 }
 
 function decodeAlias<T extends string>(

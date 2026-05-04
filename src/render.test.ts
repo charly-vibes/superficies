@@ -29,3 +29,15 @@ test('renderApp includes all curated preset options', () => {
     assert.match(target.innerHTML, new RegExp(`>${preset.label}<`));
   }
 });
+
+test('renderApp renders the selected hero layout without dropping other preview zones', () => {
+  const target = { innerHTML: '' };
+
+  renderApp(target as HTMLElement, { ...defaultState, heroLayout: 'bento' });
+
+  assert.match(target.innerHTML, /name="heroLayout"/);
+  assert.match(target.innerHTML, /data-hero-layout="bento"/);
+  assert.match(target.innerHTML, /Hero zone/);
+  assert.match(target.innerHTML, /Specimen strip/);
+  assert.match(target.innerHTML, /Token panel/);
+});

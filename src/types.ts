@@ -1,6 +1,7 @@
 export type Mode = 'light' | 'dark' | 'both';
 export type Archetype = 'saas' | 'restaurant' | 'editorial';
 export type Preset = 'neobrutalist' | 'softSaas' | 'warmEditorial';
+export type HeroLayout = 'hero+features' | 'bento' | 'magazine' | 'sidebar+main';
 
 export type Typography = 'chunky' | 'system' | 'serif';
 export type Colorway = 'acid' | 'sky' | 'sepia';
@@ -20,12 +21,26 @@ export interface LiveDimensions {
 
 export type LiveDimensionKey = keyof LiveDimensions;
 
+export interface HeroContent {
+  eyebrow: string;
+  title: string;
+  copy: string;
+  cta: string;
+  body: string;
+  features: string[];
+}
+
+export type HeroOverrideKey = 'eyebrow' | 'title' | 'copy' | 'cta' | 'body';
+export type ContentOverrides = Record<HeroOverrideKey, string | null>;
+
 export interface CatalogState {
   preset: Preset;
   archetype: Archetype;
   mode: Mode;
+  heroLayout: HeroLayout;
   live: LiveDimensions;
   departedFromPreset: boolean;
+  contentOverrides: ContentOverrides;
 }
 
 export interface PresetDefinition {
@@ -35,8 +50,5 @@ export interface PresetDefinition {
 }
 
 export interface ArchetypeContent {
-  eyebrow: string;
-  title: string;
-  copy: string;
-  cta: string;
+  hero: HeroContent;
 }

@@ -1,9 +1,10 @@
-import { archetypeContent, presets } from './data.ts';
+import { presets } from './data.ts';
 import { getExportText, type ExportTab } from './export.ts';
+import { resolveHeroContent } from './state.ts';
 import type { CatalogState } from './types.ts';
 
 export function renderApp(target: HTMLElement, state: CatalogState): void {
-  const content = archetypeContent[state.archetype];
+  const content = resolveHeroContent(state);
   const appMode = state.mode;
   const exportText = getExportText(state, 'full');
   const presetStatus = state.departedFromPreset
@@ -11,7 +12,7 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
     : presets[state.preset].label;
 
   target.innerHTML = `
-    <div class="shell" data-mode="${appMode}" data-typography="${state.live.typography}" data-color="${state.live.color}" data-spacing="${state.live.spacing}" data-density="${state.live.density}" data-radius="${state.live.radius}" data-surface="${state.live.surface}">
+    <div class="shell" data-mode="${appMode}" data-hero-layout="${state.heroLayout}" data-typography="${state.live.typography}" data-color="${state.live.color}" data-spacing="${state.live.spacing}" data-density="${state.live.density}" data-radius="${state.live.radius}" data-surface="${state.live.surface}">
       <header class="topbar">
         <div>
           <p class="kicker">superficies</p>
@@ -40,6 +41,15 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
               ${option('light', 'Light', state.mode)}
               ${option('dark', 'Dark', state.mode)}
               ${option('both', 'Both', state.mode)}
+            </select>
+          </label>
+          <label>
+            <span>Hero layout</span>
+            <select name="heroLayout">
+              ${option('hero+features', 'Hero + features', state.heroLayout)}
+              ${option('bento', 'Bento', state.heroLayout)}
+              ${option('magazine', 'Magazine', state.heroLayout)}
+              ${option('sidebar+main', 'Sidebar + main', state.heroLayout)}
             </select>
           </label>
           <label>
@@ -91,6 +101,14 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
             </select>
           </label>
           <p class="preset-status" aria-live="polite">${presetStatus}</p>
+          <label>
+            <span>Headline override</span>
+            <input name="title" value="${escapeAttribute(state.contentOverrides.title ?? '')}" placeholder="Use archetype headline" />
+          </label>
+          <label>
+            <span>Copy override</span>
+            <input name="copy" value="${escapeAttribute(state.contentOverrides.copy ?? '')}" placeholder="Use archetype copy" />
+          </label>
           <button type="button" data-export-open>Export</button>
         </div>
       </header>
@@ -101,6 +119,10 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
           <p class="eyebrow">${content.eyebrow}</p>
           <h2>${content.title}</h2>
           <p>${content.copy}</p>
+          <p class="hero-body">${content.body}</p>
+          <ul class="feature-list">
+            ${content.features.map((feature) => `<li>${feature}</li>`).join('')}
+          </ul>
           <div class="hero-actions">
             <button type="button">${content.cta}</button>
             <button type="button" class="secondary">Compare tokens</button>
@@ -207,6 +229,10 @@ export function attachExportInteractions(target: HTMLElement, state: CatalogStat
 
 function option(value: string, label: string, selectedValue: string): string {
   return `<option value="${value}" ${selectedValue === value ? 'selected' : ''}>${label}</option>`;
+}
+
+function escapeAttribute(value: string): string {
+  return escapeHtml(value).replaceAll('"', '&quot;');
 }
 
 function escapeHtml(value: string): string {

@@ -12,7 +12,7 @@ test('writeStateToHash serializes supported state deterministically with compact
     mode: 'dark',
   };
 
-  assert.equal(writeStateToHash(state), '#p=n&a=r&m=d&ty=c&co=a&sp=b&de=m&ra=h&su=o&cu=0');
+  assert.equal(writeStateToHash(state), '#p=n&a=r&m=d&hl=hf&ty=c&co=a&sp=b&de=m&ra=h&su=o&cu=0');
 });
 
 test('readStateFromHash round-trips valid supported fields', () => {
@@ -28,7 +28,7 @@ test('readStateFromHash round-trips valid supported fields', () => {
 });
 
 test('readStateFromHash accepts compact aliases', () => {
-  assert.deepEqual(readStateFromHash('#p=n&a=e&m=l&ty=c&co=a&sp=b&de=m&ra=h&su=o&cu=0'), {
+  assert.deepEqual(readStateFromHash('#p=n&a=e&m=l&hl=hf&ty=c&co=a&sp=b&de=m&ra=h&su=o&cu=0'), {
     ...defaultState,
     archetype: 'editorial',
     mode: 'light',

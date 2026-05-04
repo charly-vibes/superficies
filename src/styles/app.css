@@ -22,11 +22,13 @@ body {
 }
 
 button,
+input,
 select {
   font: inherit;
 }
 
 button,
+input,
 select,
 .zone,
 .export-panel {
@@ -36,6 +38,7 @@ select,
 }
 
 button,
+input,
 select {
   background: var(--panel);
   color: var(--ink);
@@ -106,6 +109,11 @@ button:disabled {
   padding: 1.25rem;
 }
 
+.hero-zone {
+  display: grid;
+  gap: 1rem;
+}
+
 .hero-zone h2 {
   font-size: clamp(2rem, 5vw, 4rem);
   line-height: 0.95;
@@ -121,6 +129,53 @@ button:disabled {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 0.8rem;
+}
+
+.hero-body {
+  max-width: 64ch;
+}
+
+.feature-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.feature-list li {
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  padding: 0.45rem 0.7rem;
+}
+
+.shell[data-hero-layout='bento'] .hero-zone {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.shell[data-hero-layout='bento'] .hero-zone h2 {
+  max-width: none;
+}
+
+.shell[data-hero-layout='magazine'] .hero-zone h2 {
+  font-family: Georgia, 'Times New Roman', serif;
+  max-width: 16ch;
+}
+
+.shell[data-hero-layout='sidebar+main'] .hero-zone {
+  grid-template-columns: minmax(12rem, 0.5fr) minmax(0, 1fr);
+}
+
+.shell[data-hero-layout='sidebar+main'] .hero-zone .eyebrow,
+.shell[data-hero-layout='sidebar+main'] .hero-zone .feature-list {
+  grid-column: 1;
+}
+
+.shell[data-hero-layout='sidebar+main'] .hero-zone h2,
+.shell[data-hero-layout='sidebar+main'] .hero-zone p:not(.zone-label):not(.eyebrow),
+.shell[data-hero-layout='sidebar+main'] .hero-zone .hero-actions {
+  grid-column: 2;
 }
 
 .specimen-row {
@@ -235,6 +290,7 @@ button:disabled {
 }
 
 .shell[data-radius='sharp'] button,
+.shell[data-radius='sharp'] input,
 .shell[data-radius='sharp'] select,
 .shell[data-radius='sharp'] .zone,
 .shell[data-radius='sharp'] .export-panel,
@@ -245,12 +301,14 @@ button:disabled {
 }
 
 .shell[data-radius='pill'] button,
+.shell[data-radius='pill'] input,
 .shell[data-radius='pill'] select,
 .shell[data-radius='pill'] .chip {
   border-radius: 999px;
 }
 
 .shell[data-surface='flat'] button,
+.shell[data-surface='flat'] input,
 .shell[data-surface='flat'] select,
 .shell[data-surface='flat'] .zone,
 .shell[data-surface='flat'] .export-panel {
@@ -292,8 +350,15 @@ button:disabled {
   .topbar,
   .actions,
   .export-header,
-  .export-footer {
+  .export-footer,
+  .shell[data-hero-layout='bento'] .hero-zone,
+  .shell[data-hero-layout='sidebar+main'] .hero-zone {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .shell[data-hero-layout='bento'] .hero-zone,
+  .shell[data-hero-layout='sidebar+main'] .hero-zone {
+    display: flex;
   }
 }

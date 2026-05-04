@@ -36,7 +36,7 @@ test('controller commits rerender and synchronize the hash deterministically', (
     { ...defaultState, mode: 'dark' },
   ]);
   assert.deepEqual(attached, rendered);
-  assert.equal(synced.at(-1), '#p=n&a=s&m=d&ty=c&co=a&sp=b&de=m&ra=h&su=o&cu=0');
+  assert.equal(synced.at(-1), '#p=n&a=s&m=d&hl=hf&ty=c&co=a&sp=b&de=m&ra=h&su=o&cu=0');
 });
 
 test('controller hash changes recover safely to the default state without rewriting the hash', () => {

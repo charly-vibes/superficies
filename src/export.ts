@@ -4,7 +4,7 @@ import type { CatalogState } from './types.ts';
 export type ExportTab = 'full' | 'minimum' | 'tokens';
 
 export function getExportText(state: CatalogState, tab: ExportTab): string {
-  const content = archetypeContent[state.archetype];
+  const content = archetypeContent[state.archetype].hero;
 
   if (tab === 'minimum') {
     return [

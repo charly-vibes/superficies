@@ -1,0 +1,1 @@
+Continued with ticket superficies-4zg.3: added hero layout state and controls for hero+features, bento, magazine, and sidebar+main; expanded archetype hero defaults with body/features; added content override helpers and title/copy override controls; ensured render keeps specimen and token zones present. Verified with npm test, npm run check, and npm run build.

@@ -41,21 +41,33 @@ export const presets: Record<Preset, PresetDefinition> = {
 
 export const archetypeContent: Record<Archetype, ArchetypeContent> = {
   saas: {
-    eyebrow: 'SaaS dashboard',
-    title: 'Operate your product with a clearer visual system.',
-    copy: 'Preview a thin vertical slice of a token-driven interface with exportable design context.',
-    cta: 'Export brief',
+    hero: {
+      eyebrow: 'SaaS dashboard',
+      title: 'Operate your product with a clearer visual system.',
+      copy: 'Preview a thin vertical slice of a token-driven interface with exportable design context.',
+      cta: 'Export brief',
+      body: 'A command center for teams that need fast decisions, reliable telemetry, and a brand system that can scale beyond a first pass.',
+      features: ['Operational clarity', 'Token-aware UI', 'Fast launch path'],
+    },
   },
   restaurant: {
-    eyebrow: 'Neighborhood restaurant',
-    title: 'Shape a memorable dining brand before a full redesign.',
-    copy: 'Compare layout tone, specimen styling, and token direction in one compact preview.',
-    cta: 'View menu system',
+    hero: {
+      eyebrow: 'Neighborhood restaurant',
+      title: 'Shape a memorable dining brand before a full redesign.',
+      copy: 'Compare layout tone, specimen styling, and token direction in one compact preview.',
+      cta: 'View menu system',
+      body: 'A warm, tactile surface for menus, reservations, events, and hospitality moments that need to feel local and polished.',
+      features: ['Menu storytelling', 'Reservation flow', 'Seasonal campaigns'],
+    },
   },
   editorial: {
-    eyebrow: 'Editorial platform',
-    title: 'Tune hierarchy, rhythm, and reading surfaces with confidence.',
-    copy: 'Use the catalog shell to sanity-check a visual direction before generating a full brief.',
-    cta: 'Review issue package',
+    hero: {
+      eyebrow: 'Editorial platform',
+      title: 'Tune hierarchy, rhythm, and reading surfaces with confidence.',
+      copy: 'Use the catalog shell to sanity-check a visual direction before generating a full brief.',
+      cta: 'Review issue package',
+      body: 'A publishing surface for long reads, opinion packages, newsletters, and archive browsing with deliberate type rhythm.',
+      features: ['Reading rhythm', 'Issue packaging', 'Archive depth'],
+    },
   },
 };
