@@ -318,8 +318,9 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
           <div class="export-footer">
             <div class="export-actions">
               <button type="button" data-copy>Copy</button>
-              <button type="button" data-download-export="full">Download full brief</button>
-              <button type="button" data-download-export="tokens">Download token JSON</button>
+              <button type="button" data-download-export="full">Download brief</button>
+              <button type="button" data-download-export="css">Download CSS</button>
+              <button type="button" data-download-export="tokens">Download JSON</button>
             </div>
             <span class="copy-feedback" aria-live="polite"></span>
           </div>
@@ -376,7 +377,8 @@ export function attachExportInteractions(target: HTMLElement, state: CatalogStat
     button.addEventListener('click', () => {
       const tab = button.dataset.downloadExport as ExportTab;
       downloadExportArtifact(state, tab);
-      feedback.textContent = tab === 'tokens' ? 'Downloaded token JSON.' : 'Downloaded full brief.';
+      const label = tab === 'tokens' ? 'JSON' : tab === 'css' ? 'CSS' : 'brief';
+      feedback.textContent = `Downloaded ${label}.`;
       window.setTimeout(() => {
         feedback.textContent = '';
       }, 1500);

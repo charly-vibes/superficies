@@ -41,8 +41,9 @@ test('listExportArtifacts exposes the three required tabs in stable order', () =
     artifacts.map((artifact) => [artifact.tab, artifact.label]),
     [
       ['full', 'Full brief'],
-      ['minimum', 'Minimum brief'],
+      ['css', 'CSS Variables'],
       ['tokens', 'Token JSON'],
+      ['minimum', 'Minimum'],
     ],
   );
   assert.equal(artifacts[0].content, getExportText(defaultState, 'full'));
@@ -99,7 +100,7 @@ test('getExportArtifact returns deterministic tab-specific content from current 
   assert.match(getExportArtifact(state, 'full').content, /<typography>chunky<\/typography>/);
   assert.match(getExportArtifact(state, 'full').content, /<spacing>loose<\/spacing>/);
   assert.match(getExportArtifact(state, 'minimum').content, /Accessibility target: WCAG 2\.2 AA/);
-  assert.match(getExportArtifact(state, 'minimum').content, /URL-hash-only state/);
+  assert.match(getExportArtifact(state, 'minimum').content, /Technical specs: scale ratio 1\.5/);
   assert.equal(JSON.parse(getExportArtifact(state, 'tokens').content).live.surface, 'elevated');
 });
 
