@@ -150,6 +150,21 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
         </details>
 
         <details class="sidebar-section" open>
+          <summary>System rhythm</summary>
+          <div class="sidebar-section-body">
+            <p class="token-meta">Tune the mathematical relationship between typographic levels and spatial increments.</p>
+            <label>
+              <span>Scale ratio: ${state.live.scaleRatio}</span>
+              <input type="range" name="scaleRatio" min="1.05" max="1.618" step="0.01" value="${state.live.scaleRatio}" />
+            </label>
+            <label>
+              <span>Base size (rem)</span>
+              <input type="text" name="baseSize" value="${escapeAttribute(state.live.baseSize)}" />
+            </label>
+          </div>
+        </details>
+
+        <details class="sidebar-section" open>
           <summary>Typography</summary>
           <div class="sidebar-section-body">
             <label>

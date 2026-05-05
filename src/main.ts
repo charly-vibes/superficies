@@ -47,6 +47,8 @@ function bindControls(target: HTMLElement, onPatch: (patch: StateUpdate) => void
     'input[name="audience"], textarea[name="jobsToBeDone"], textarea[name="antiReferences"], input[name="motionIntent"], input[name="accessibilityLevel"], textarea[name="contentSample"], textarea[name="antiDefaults"]',
   );
   const exportFormatSelect = target.querySelector<HTMLSelectElement>('select[name="exportFormat"]');
+  const scaleRatioInput = target.querySelector<HTMLInputElement>('input[name="scaleRatio"]');
+  const baseSizeInput = target.querySelector<HTMLInputElement>('input[name="baseSize"]');
   const liveControls = target.querySelectorAll<HTMLSelectElement>(
     'select[name="typography"], select[name="color"], select[name="spacing"], select[name="density"], select[name="radius"], select[name="surface"]',
   );
@@ -92,6 +94,16 @@ function bindControls(target: HTMLElement, onPatch: (patch: StateUpdate) => void
   exportFormatSelect?.addEventListener('change', (event) => {
     const value = (event.currentTarget as HTMLSelectElement).value as ExportFormat;
     onPatch((current) => updateExportContext('exportFormat', value, current));
+  });
+
+  scaleRatioInput?.addEventListener('input', (event) => {
+    const value = parseFloat((event.currentTarget as HTMLInputElement).value);
+    onPatch((current) => updateLiveDimension('scaleRatio', value, current));
+  });
+
+  baseSizeInput?.addEventListener('change', (event) => {
+    const value = (event.currentTarget as HTMLInputElement).value;
+    onPatch((current) => updateLiveDimension('baseSize', value, current));
   });
 
   liveControls.forEach((control) => {

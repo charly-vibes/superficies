@@ -19,6 +19,8 @@ export interface LiveDimensions {
   density: Density;
   radius: Radius;
   surface: Surface;
+  scaleRatio: number;
+  baseSize: string;
 }
 
 export type LiveDimensionKey = keyof LiveDimensions;

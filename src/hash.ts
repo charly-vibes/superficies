@@ -123,6 +123,15 @@ export function readStateFromHash(hash: string): CatalogState {
   const density = decodeAlias(params.get('de'), densityAliases) ?? defaultState.live.density;
   const radius = decodeAlias(params.get('ra'), radiusAliases) ?? defaultState.live.radius;
   const surface = decodeAlias(params.get('su'), surfaceAliases) ?? defaultState.live.surface;
+  const sr = params.get('sr');
+  let scaleRatio = sr ? parseFloat(sr) : defaultState.live.scaleRatio;
+  if (isNaN(scaleRatio)) {
+    scaleRatio = defaultState.live.scaleRatio;
+  }
+  scaleRatio = Math.min(1.618, Math.max(1.05, scaleRatio));
+
+  const bs = params.get('bs');
+  const baseSize = bs && /^\d+(\.\d+)?(rem|px|em)$/.test(bs) ? bs : defaultState.live.baseSize;
   const departedFromPreset = decodeBoolean(params.get('cu')) ?? defaultState.departedFromPreset;
   const exportFormat = decodeAlias(params.get('ef'), exportFormatAliases) ?? defaultState.exportContext.exportFormat;
   const bodyFont = decodeAlias(params.get('bf'), bodyFontAliases) ?? defaultBodyFonts[typography];
@@ -132,8 +141,9 @@ export function readStateFromHash(hash: string): CatalogState {
     archetype,
     mode,
     heroLayout,
-    live: { typography, bodyFont, color, spacing, density, radius, surface },
+    live: { typography, bodyFont, color, spacing, density, radius, surface, scaleRatio, baseSize },
     departedFromPreset,
+
     contentOverrides: {
       eyebrow: params.get('ey'),
       title: params.get('ti'),
@@ -180,6 +190,8 @@ function buildReadableHash(state: CatalogState): string {
   params.set('de', densityAliases[state.live.density]);
   params.set('ra', radiusAliases[state.live.radius]);
   params.set('su', surfaceAliases[state.live.surface]);
+  params.set('sr', state.live.scaleRatio.toString());
+  params.set('bs', state.live.baseSize);
   params.set('cu', state.departedFromPreset ? '1' : '0');
   setOptionalParam(params, 'ey', state.contentOverrides.eyebrow);
   setOptionalParam(params, 'ti', state.contentOverrides.title);
@@ -259,7 +271,10 @@ function isCatalogState(value: unknown): value is CatalogState {
     typeof live.spacing === 'string' && new Set(['tight', 'balanced', 'loose']).has(live.spacing) &&
     typeof live.density === 'string' && new Set(['compact', 'comfortable', 'roomy']).has(live.density) &&
     typeof live.radius === 'string' && new Set(['sharp', 'soft', 'pill']).has(live.radius) &&
-    typeof live.surface === 'string' && new Set(['flat', 'outlined', 'elevated']).has(live.surface)
+    typeof live.surface === 'string' && new Set(['flat', 'outlined', 'elevated']).has(live.surface) &&
+    typeof live.scaleRatio === 'number' &&
+    typeof live.baseSize === 'string' &&
+    /^\d+(\.\d+)?(rem|px|em)$/.test(live.baseSize)
   );
 }
 

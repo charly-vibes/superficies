@@ -59,13 +59,18 @@ export function updateLiveDimension<K extends LiveDimensionKey>(
   value: LiveDimensions[K],
   current: CatalogState,
 ): CatalogState {
+  let effectiveValue = value;
+  if (key === 'scaleRatio' && typeof value === 'number') {
+    effectiveValue = Math.min(1.618, Math.max(1.05, value)) as LiveDimensions[K];
+  }
+
   return {
     ...current,
     live: {
       ...current.live,
-      [key]: value,
+      [key]: effectiveValue,
     },
-    departedFromPreset: current.live[key] === value ? current.departedFromPreset : true,
+    departedFromPreset: current.live[key] === effectiveValue ? current.departedFromPreset : true,
   };
 }
 

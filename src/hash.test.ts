@@ -12,7 +12,7 @@ test('writeStateToHash serializes supported state deterministically with compact
     mode: 'dark',
   };
 
-  assert.equal(writeStateToHash(state), '#p=n&a=r&m=d&hl=hf&ty=c&bf=s&co=a&sp=b&de=m&ra=h&su=o&cu=0');
+  assert.equal(writeStateToHash(state), '#p=n&a=r&m=d&hl=hf&ty=c&bf=s&co=a&sp=b&de=m&ra=h&su=o&sr=1.5&bs=1rem&cu=0');
 });
 
 test('readStateFromHash round-trips valid supported fields', () => {
@@ -20,7 +20,13 @@ test('readStateFromHash round-trips valid supported fields', () => {
     ...defaultState,
     archetype: 'editorial',
     mode: 'light',
-    live: { ...defaultState.live, density: 'compact', radius: 'pill' },
+    live: {
+      ...defaultState.live,
+      density: 'compact',
+      radius: 'pill',
+      scaleRatio: 1.33,
+      baseSize: '0.875rem',
+    },
     departedFromPreset: true,
     exportContext: {
       ...defaultState.exportContext,
@@ -39,7 +45,7 @@ test('readStateFromHash round-trips valid supported fields', () => {
 });
 
 test('readStateFromHash accepts compact aliases without bf param and derives bodyFont from typography', () => {
-  assert.deepEqual(readStateFromHash('#p=n&a=e&m=l&hl=hf&ty=c&co=a&sp=b&de=m&ra=h&su=o&cu=0'), {
+  assert.deepEqual(readStateFromHash('#p=n&a=e&m=l&hl=hf&ty=c&co=a&sp=b&de=m&ra=h&su=o&sr=1.5&bs=1rem&cu=0'), {
     ...defaultState,
     archetype: 'editorial',
     mode: 'light',
@@ -47,7 +53,7 @@ test('readStateFromHash accepts compact aliases without bf param and derives bod
 });
 
 test('readStateFromHash accepts explicit bf param', () => {
-  const result = readStateFromHash('#p=n&a=s&m=l&hl=hf&ty=s&bf=f&co=a&sp=b&de=m&ra=h&su=o&cu=0');
+  const result = readStateFromHash('#p=n&a=s&m=l&hl=hf&ty=s&bf=f&co=a&sp=b&de=m&ra=h&su=o&sr=1.5&bs=1rem&cu=0');
   assert.equal(result.live.bodyFont, 'serif');
 });
 
@@ -82,4 +88,10 @@ test('readStateFromHash round-trips fallback base64 hash back to original state'
 
 test('readStateFromHash returns default state for malformed base64 fallback', () => {
   assert.deepEqual(readStateFromHash('#b64=!!!notbase64!!!'), defaultState);
+});
+
+test('readStateFromHash handles invalid sr and bs values gracefully', () => {
+  const result = readStateFromHash('#p=n&sr=invalid&bs=10px');
+  assert.equal(result.live.scaleRatio, defaultState.live.scaleRatio);
+  assert.equal(result.live.baseSize, '10px');
 });

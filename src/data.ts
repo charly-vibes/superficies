@@ -32,6 +32,8 @@ export const presets: Record<Preset, PresetDefinition> = {
       density: 'comfortable',
       radius: 'sharp',
       surface: 'outlined',
+      scaleRatio: 1.5,
+      baseSize: '1rem',
     },
   },
   softSaas: {
@@ -45,6 +47,8 @@ export const presets: Record<Preset, PresetDefinition> = {
       density: 'roomy',
       radius: 'soft',
       surface: 'elevated',
+      scaleRatio: 1.2,
+      baseSize: '1rem',
     },
   },
   warmEditorial: {
@@ -58,6 +62,8 @@ export const presets: Record<Preset, PresetDefinition> = {
       density: 'comfortable',
       radius: 'soft',
       surface: 'flat',
+      scaleRatio: 1.333,
+      baseSize: '1rem',
     },
   },
 };

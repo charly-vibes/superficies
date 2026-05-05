@@ -67,7 +67,7 @@ test('renderApp token panel includes computed token values and contrast results'
 
   renderApp(target as HTMLElement, defaultState);
 
-  assert.match(target.innerHTML, /3\.5rem/);
+  assert.match(target.innerHTML, /2\.25rem/);
   assert.match(target.innerHTML, /oklch\(97% 0\.03 95\)/);
   assert.match(target.innerHTML, /#[0-9a-f]{6}/);
   assert.match(target.innerHTML, /ink on surface/);

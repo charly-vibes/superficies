@@ -47,25 +47,17 @@ const typographyFamilies: Record<Typography, string> = {
   serif: 'Georgia, Cambria, Times New Roman, serif',
 };
 
-const typographyLadders: Record<Typography, TypographyTokenStep[]> = {
-  chunky: [
-    { name: 'display', size: '3.5rem', lineHeight: '0.95', sample: 'Launch faster' },
-    { name: 'heading', size: '2rem', lineHeight: '1.05', sample: 'Visual system' },
-    { name: 'body', size: '1rem', lineHeight: '1.55', sample: 'Preview production rhythm.' },
-    { name: 'caption', size: '0.78rem', lineHeight: '1.35', sample: 'Token note' },
-  ],
-  system: [
-    { name: 'display', size: '3rem', lineHeight: '1', sample: 'Launch faster' },
-    { name: 'heading', size: '1.875rem', lineHeight: '1.12', sample: 'Visual system' },
-    { name: 'body', size: '1rem', lineHeight: '1.6', sample: 'Preview production rhythm.' },
-    { name: 'caption', size: '0.8125rem', lineHeight: '1.4', sample: 'Token note' },
-  ],
-  serif: [
-    { name: 'display', size: '3.25rem', lineHeight: '1.02', sample: 'Launch faster' },
-    { name: 'heading', size: '2.125rem', lineHeight: '1.12', sample: 'Visual system' },
-    { name: 'body', size: '1.0625rem', lineHeight: '1.65', sample: 'Preview production rhythm.' },
-    { name: 'caption', size: '0.875rem', lineHeight: '1.45', sample: 'Token note' },
-  ],
+const typographySamples: Record<TypographyTokenStep['name'], string> = {
+  display: 'Launch faster',
+  heading: 'Visual system',
+  body: 'Preview production rhythm.',
+  caption: 'Token note',
+};
+
+const typographyLineHeights: Record<Typography, Record<TypographyTokenStep['name'], string>> = {
+  chunky: { display: '0.95', heading: '1.05', body: '1.55', caption: '1.35' },
+  system: { display: '1', heading: '1.12', body: '1.6', caption: '1.4' },
+  serif: { display: '1.02', heading: '1.12', body: '1.65', caption: '1.45' },
 };
 
 const colorTokens: Record<Colorway, Record<ColorSwatch['name'], string>> = {
@@ -95,12 +87,6 @@ const colorTokens: Record<Colorway, Record<ColorSwatch['name'], string>> = {
   },
 };
 
-const spacingScales: Record<Spacing, string[]> = {
-  tight: ['0.125rem', '0.25rem', '0.5rem', '0.75rem', '1rem'],
-  balanced: ['0.25rem', '0.5rem', '1rem', '1.5rem', '2rem'],
-  loose: ['0.5rem', '1rem', '1.5rem', '2rem', '3rem'],
-};
-
 const radiusScales: Record<Radius, string[]> = {
   sharp: ['0rem', '0.125rem', '0.25rem'],
   soft: ['0.375rem', '0.75rem', '1.25rem'],
@@ -121,15 +107,19 @@ const darkModeAccents: Record<Colorway, string> = {
 };
 
 export function deriveDesignTokens(state: CatalogState): DesignTokens {
+  const { scaleRatio, baseSize, typography: typogType, spacing: spacingPref } = state.live;
+  const baseNum = parseFloat(baseSize);
+
   const lightTokens = colorTokens[state.live.color];
-  const effectiveTokens: Record<ColorSwatch['name'], string> = state.mode === 'dark'
-    ? {
-        surface: 'oklch(18% 0.02 255)',
-        ink: 'oklch(96% 0.01 95)',
-        muted: 'oklch(78% 0.02 95)',
-        accent: darkModeAccents[state.live.color],
-      }
-    : lightTokens;
+  const effectiveTokens: Record<ColorSwatch['name'], string> =
+    state.mode === 'dark'
+      ? {
+          surface: 'oklch(18% 0.02 255)',
+          ink: 'oklch(96% 0.01 95)',
+          muted: 'oklch(78% 0.02 95)',
+          accent: darkModeAccents[state.live.color],
+        }
+      : lightTokens;
 
   const semantic = (Object.entries(effectiveTokens) as Array<[ColorSwatch['name'], string]>).map(
     ([name, oklch]) => ({ name, oklch, hex: oklchToHex(oklch) }),
@@ -139,10 +129,31 @@ export function deriveDesignTokens(state: CatalogState): DesignTokens {
     ColorSwatch
   >;
 
+  const steps: Array<TypographyTokenStep['name']> = ['display', 'heading', 'body', 'caption'];
+  const stepPowers: Record<TypographyTokenStep['name'], number> = {
+    display: 2,
+    heading: 1,
+    body: 0,
+    caption: -1,
+  };
+
+  const ladder: TypographyTokenStep[] = steps.map((name) => ({
+    name,
+    size: `${round(baseNum * Math.pow(scaleRatio, stepPowers[name]), 3)}rem`,
+    lineHeight: typographyLineHeights[typogType][name],
+    sample: typographySamples[name],
+  }));
+
+  const spacingMultiplier = spacingPref === 'tight' ? 0.75 : spacingPref === 'loose' ? 1.5 : 1.0;
+  const spacingBase = baseNum * 0.25 * spacingMultiplier;
+  const spacingScale = [0, 1, 2, 3, 4].map(
+    (power) => `${round(spacingBase * Math.pow(scaleRatio, power), 3)}rem`,
+  );
+
   return {
     typography: {
-      family: typographyFamilies[state.live.typography],
-      ladder: typographyLadders[state.live.typography],
+      family: typographyFamilies[typogType],
+      ladder,
     },
     color: {
       semantic,
@@ -153,7 +164,7 @@ export function deriveDesignTokens(state: CatalogState): DesignTokens {
       ],
     },
     spacing: {
-      scale: spacingScales[state.live.spacing],
+      scale: spacingScale,
     },
     radius: {
       scale: radiusScales[state.live.radius],
