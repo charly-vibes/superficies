@@ -7,3 +7,7 @@
 # Node / build output
 node_modules/
 dist/
+
+# Playwright session state and verification screenshots
+.playwright-mcp/
+*.png
