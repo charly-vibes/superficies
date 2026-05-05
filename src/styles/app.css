@@ -15,8 +15,14 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
+  height: 100%;
+  overflow: hidden;
   background: var(--bg);
   color: var(--ink);
 }
@@ -68,7 +74,7 @@ button:disabled {
 
 .shell {
   display: flex;
-  min-height: 100vh;
+  height: 100%;
   color: var(--ink);
   background: var(--bg);
 }
@@ -397,6 +403,7 @@ button:disabled {
 .swatch {
   border: 2px solid var(--border);
   border-radius: 999px;
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--ink) 35%, transparent);
   display: inline-block;
   height: 1rem;
   width: 1rem;
@@ -588,18 +595,50 @@ button:disabled {
   --accent-ink: oklch(15% 0.04 35);
 }
 
-.shell[data-mode='both'] .preview-grid {
-  position: relative;
+.mode-split {
+  display: flex;
+  gap: 1.5rem;
+  align-items: start;
 }
 
-.shell[data-mode='both'] .preview-grid::after {
-  content: 'Light + dark comparison mode will split into side-by-side previews in a later slice.';
-  display: block;
-  border: 2px dashed var(--border);
-  border-radius: 0.9rem;
-  padding: 1rem;
-  color: var(--muted);
-  background: color-mix(in oklch, var(--panel) 92%, var(--accent));
+.preview-pane {
+  flex: 1;
+  min-width: 0;
+}
+
+.pane-label {
+  margin: 0 0 1rem;
+}
+
+.preview-pane[data-scheme='dark'] {
+  color-scheme: dark;
+  --bg: oklch(18% 0.02 255);
+  --panel: oklch(24% 0.02 255);
+  --ink: oklch(96% 0.01 95);
+  --muted: oklch(78% 0.02 95);
+  --border: oklch(80% 0.02 95);
+  --shadow: 6px 6px 0 rgb(0 0 0 / 0.45);
+  --accent: oklch(82% 0.20 85);
+  --accent-ink: oklch(18% 0.05 85);
+  background: var(--bg);
+  color: var(--ink);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+}
+
+.shell[data-color='sky'] .preview-pane[data-scheme='dark'] {
+  --accent: oklch(78% 0.15 235);
+  --accent-ink: oklch(15% 0.04 250);
+}
+
+.shell[data-color='sepia'] .preview-pane[data-scheme='dark'] {
+  --accent: oklch(74% 0.14 52);
+  --accent-ink: oklch(15% 0.04 62);
+}
+
+.shell[data-color='vinyl'] .preview-pane[data-scheme='dark'] {
+  --accent: oklch(74% 0.24 32);
+  --accent-ink: oklch(15% 0.04 35);
 }
 
 @media (max-width: 899px) {
