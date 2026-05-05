@@ -15,13 +15,8 @@
   box-sizing: border-box;
 }
 
-html {
-  height: 100%;
-}
-
 body {
   margin: 0;
-  height: 100%;
   overflow: hidden;
   background: var(--bg);
   color: var(--ink);
@@ -74,7 +69,7 @@ button:disabled {
 
 .shell {
   display: flex;
-  height: 100%;
+  height: 100dvh;
   color: var(--ink);
   background: var(--bg);
 }
@@ -253,10 +248,48 @@ button:disabled {
 
 .shell[data-hero-layout='bento'] .hero-zone {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+.shell[data-hero-layout='bento'] .hero-zone .zone-label {
+  grid-column: 1 / -1;
+}
+
+.shell[data-hero-layout='bento'] .hero-zone .eyebrow {
+  grid-column: 1;
 }
 
 .shell[data-hero-layout='bento'] .hero-zone h2 {
   max-width: none;
+  grid-column: 1;
+  grid-row: 3 / span 2;
+  align-self: center;
+}
+
+.shell[data-hero-layout='bento'] .hero-zone p:not(.zone-label):not(.eyebrow) {
+  grid-column: 2;
+}
+
+.shell[data-hero-layout='bento'] .hero-zone .hero-body {
+  grid-column: 1;
+}
+
+.shell[data-hero-layout='bento'] .hero-zone .feature-list {
+  grid-column: 2;
+  grid-row: 2 / span 3;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.shell[data-hero-layout='bento'] .hero-zone .feature-list li {
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--panel);
+  font-size: 0.9rem;
+}
+
+.shell[data-hero-layout='bento'] .hero-zone .hero-actions {
+  grid-column: 1;
 }
 
 .shell[data-hero-layout='magazine'] .hero-zone {
@@ -304,18 +337,18 @@ button:disabled {
 
 .shell[data-hero-layout='terminal'] .hero-zone {
   font-family: 'Cascadia Code', 'Fira Code', 'Menlo', 'Consolas', monospace;
-  background: oklch(12% 0.01 255);
-  color: oklch(90% 0.04 150);
-  border-color: oklch(30% 0.02 255);
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--border);
   border-radius: 0.4rem;
   padding: 0;
 }
 
 .shell[data-hero-layout='terminal'] .hero-zone .zone-label {
-  background: oklch(20% 0.02 255);
-  color: oklch(60% 0.04 255);
+  background: var(--panel);
+  color: var(--muted);
   padding: 0.4rem 1rem;
-  border-block-end: 1px solid oklch(30% 0.02 255);
+  border-block-end: 1px solid var(--border);
   grid-column: 1 / -1;
   letter-spacing: 0;
   font-family: inherit;
@@ -323,7 +356,7 @@ button:disabled {
 }
 
 .shell[data-hero-layout='terminal'] .hero-zone .eyebrow {
-  color: oklch(65% 0.15 150);
+  color: var(--accent);
   padding: 0.75rem 1rem 0;
   font-family: inherit;
   letter-spacing: 0;
@@ -334,17 +367,17 @@ button:disabled {
   font-size: 1.1rem;
   font-weight: normal;
   max-width: none;
-  color: oklch(95% 0.08 150);
+  color: var(--ink);
   padding: 0 1rem;
 }
 
 .shell[data-hero-layout='terminal'] .hero-zone h2::before {
   content: '$ ';
-  color: oklch(65% 0.18 150);
+  color: var(--accent);
 }
 
 .shell[data-hero-layout='terminal'] .hero-zone p:not(.zone-label):not(.eyebrow) {
-  color: oklch(75% 0.03 255);
+  color: var(--muted);
   padding: 0 1rem;
   font-family: inherit;
   font-size: 0.9rem;
@@ -361,31 +394,31 @@ button:disabled {
   border-radius: 0;
   padding: 0.1rem 0;
   font-size: 0.85rem;
-  color: oklch(70% 0.04 255);
+  color: var(--muted);
 }
 
 .shell[data-hero-layout='terminal'] .hero-zone .feature-list li::before {
   content: '  › ';
-  color: oklch(65% 0.18 150);
+  color: var(--accent);
 }
 
 .shell[data-hero-layout='terminal'] .hero-zone .hero-actions {
   padding: 0.75rem 1rem 1rem;
-  border-block-start: 1px solid oklch(30% 0.02 255);
+  border-block-start: 1px solid var(--border);
   margin-block-start: 0.5rem;
 }
 
 .shell[data-hero-layout='terminal'] .hero-zone .hero-actions button {
-  background: oklch(20% 0.02 255);
-  color: oklch(65% 0.18 150);
-  border-color: oklch(40% 0.02 255);
+  background: var(--panel);
+  color: var(--accent);
+  border-color: var(--border);
   font-family: inherit;
   font-size: 0.85rem;
   box-shadow: none;
 }
 
 .shell[data-hero-layout='terminal'] .hero-zone .hero-actions button.secondary {
-  color: oklch(55% 0.03 255);
+  color: var(--muted);
 }
 
 .specimen-row {
@@ -433,7 +466,7 @@ button:disabled {
 }
 
 [data-forced-state='loading'] {
-  background-image: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent);
+  background-image: linear-gradient(90deg, transparent, color-mix(in oklch, var(--panel) 40%, transparent), transparent);
 }
 
 .feedback {
@@ -706,6 +739,13 @@ button:disabled {
 
 .pane-label {
   margin: 0 0 1rem;
+}
+
+.preview-pane[data-scheme='light'] {
+  background: var(--panel);
+  color: var(--ink);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
 }
 
 .preview-pane[data-scheme='dark'] {
