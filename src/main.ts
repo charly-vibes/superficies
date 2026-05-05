@@ -23,12 +23,20 @@ const controller = createCatalogController({
 controller.initialize();
 window.addEventListener('hashchange', () => controller.onHashChange());
 
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    appRoot.querySelector<HTMLElement>('.sidebar.is-open')?.classList.remove('is-open');
+  }
+});
+
 function bindControls(target: HTMLElement, onPatch: (patch: StateUpdate) => void): void {
   const presetSelect = target.querySelector<HTMLSelectElement>('select[name="preset"]');
   const archetypeSelect = target.querySelector<HTMLSelectElement>('select[name="archetype"]');
   const modeSelect = target.querySelector<HTMLSelectElement>('select[name="mode"]');
   const heroLayoutSelect = target.querySelector<HTMLSelectElement>('select[name="heroLayout"]');
-  const contentControls = target.querySelectorAll<HTMLInputElement>('input[name="title"], input[name="copy"]');
+  const contentControls = target.querySelectorAll<HTMLInputElement>(
+    'input[name="title"], input[name="copy"], input[name="eyebrow"], input[name="cta"], input[name="body"]',
+  );
   const exportTextControls = target.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
     'input[name="audience"], textarea[name="jobsToBeDone"], textarea[name="antiReferences"], input[name="motionIntent"], input[name="accessibilityLevel"], textarea[name="contentSample"], textarea[name="antiDefaults"]',
   );
@@ -87,6 +95,7 @@ function bindControls(target: HTMLElement, onPatch: (patch: StateUpdate) => void
         onPatch((current) => updateTypography(element.value as Typography, current));
       } else {
         onPatch((current) =>
+          // TypeScript can't correlate element.name → LiveDimensions[K]; UI constrains valid values
           updateLiveDimension(element.name as LiveDimensionKey, element.value as never, current),
         );
       }

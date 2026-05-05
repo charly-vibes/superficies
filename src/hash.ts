@@ -109,36 +109,18 @@ export function readStateFromHash(hash: string): CatalogState {
     return defaultState;
   }
 
-  const preset = decodeAlias(params.get('p'), presetAliases);
-  const archetype = decodeAlias(params.get('a'), archetypeAliases);
-  const mode = decodeAlias(params.get('m'), modeAliases);
-  const heroLayout = decodeAlias(params.get('hl'), heroLayoutAliases);
-  const typography = decodeAlias(params.get('ty'), typographyAliases);
-  const color = decodeAlias(params.get('co'), colorAliases);
-  const spacing = decodeAlias(params.get('sp'), spacingAliases);
-  const density = decodeAlias(params.get('de'), densityAliases);
-  const radius = decodeAlias(params.get('ra'), radiusAliases);
-  const surface = decodeAlias(params.get('su'), surfaceAliases);
-  const departedFromPreset = decodeBoolean(params.get('cu'));
-  const exportFormat = decodeAlias(params.get('ef') ?? exportFormatAliases.xml, exportFormatAliases);
-
-  if (
-    !preset ||
-    !archetype ||
-    !mode ||
-    !heroLayout ||
-    !typography ||
-    !color ||
-    !spacing ||
-    !density ||
-    !radius ||
-    !surface ||
-    departedFromPreset === null ||
-    !exportFormat
-  ) {
-    return defaultState;
-  }
-
+  const preset = decodeAlias(params.get('p'), presetAliases) ?? defaultState.preset;
+  const archetype = decodeAlias(params.get('a'), archetypeAliases) ?? defaultState.archetype;
+  const mode = decodeAlias(params.get('m'), modeAliases) ?? defaultState.mode;
+  const heroLayout = decodeAlias(params.get('hl'), heroLayoutAliases) ?? defaultState.heroLayout;
+  const typography = decodeAlias(params.get('ty'), typographyAliases) ?? defaultState.live.typography;
+  const color = decodeAlias(params.get('co'), colorAliases) ?? defaultState.live.color;
+  const spacing = decodeAlias(params.get('sp'), spacingAliases) ?? defaultState.live.spacing;
+  const density = decodeAlias(params.get('de'), densityAliases) ?? defaultState.live.density;
+  const radius = decodeAlias(params.get('ra'), radiusAliases) ?? defaultState.live.radius;
+  const surface = decodeAlias(params.get('su'), surfaceAliases) ?? defaultState.live.surface;
+  const departedFromPreset = decodeBoolean(params.get('cu')) ?? defaultState.departedFromPreset;
+  const exportFormat = decodeAlias(params.get('ef'), exportFormatAliases) ?? defaultState.exportContext.exportFormat;
   const bodyFont = decodeAlias(params.get('bf'), bodyFontAliases) ?? defaultBodyFonts[typography];
 
   return {
@@ -174,7 +156,11 @@ export function writeStateToHash(state: CatalogState): string {
   if (readable.length <= HASH_THRESHOLD) {
     return readable;
   }
-  return `#b64=${toBase64(JSON.stringify(state))}`;
+  const b64Hash = `#b64=${toBase64(JSON.stringify(state))}`;
+  if (b64Hash.length > 4000) {
+    console.warn(`[superficies] URL hash is ${b64Hash.length} chars — some proxies limit URLs to ~2000 chars.`);
+  }
+  return b64Hash;
 }
 
 function buildReadableHash(state: CatalogState): string {
@@ -214,7 +200,7 @@ function setOptionalParam(params: URLSearchParams, key: string, value: string | 
 }
 
 function setChangedParam(params: URLSearchParams, key: string, value: string, defaultValue: string): void {
-  if (value && value !== defaultValue) {
+  if (value !== defaultValue) {
     params.set(key, value);
   }
 }
@@ -247,15 +233,29 @@ function decodeBoolean(value: string | null): boolean | null {
 function isCatalogState(value: unknown): value is CatalogState {
   if (typeof value !== 'object' || value === null) return false;
   const s = value as Record<string, unknown>;
+
+  if (
+    typeof s.preset !== 'string' || !new Set(['neobrutalist', 'softSaas', 'warmEditorial']).has(s.preset) ||
+    typeof s.archetype !== 'string' || !new Set(['saas', 'restaurant', 'editorial']).has(s.archetype) ||
+    typeof s.mode !== 'string' || !new Set(['light', 'dark', 'both']).has(s.mode) ||
+    typeof s.heroLayout !== 'string' || !new Set(['hero+features', 'bento', 'magazine', 'sidebar+main']).has(s.heroLayout) ||
+    typeof s.departedFromPreset !== 'boolean' ||
+    typeof s.live !== 'object' || s.live === null ||
+    typeof s.contentOverrides !== 'object' || s.contentOverrides === null ||
+    typeof s.exportContext !== 'object' || s.exportContext === null
+  ) {
+    return false;
+  }
+
+  const live = s.live as Record<string, unknown>;
   return (
-    typeof s.preset === 'string' &&
-    typeof s.archetype === 'string' &&
-    typeof s.mode === 'string' &&
-    typeof s.heroLayout === 'string' &&
-    typeof s.live === 'object' && s.live !== null &&
-    typeof s.departedFromPreset === 'boolean' &&
-    typeof s.contentOverrides === 'object' && s.contentOverrides !== null &&
-    typeof s.exportContext === 'object' && s.exportContext !== null
+    typeof live.typography === 'string' && new Set(['chunky', 'system', 'serif']).has(live.typography) &&
+    typeof live.bodyFont === 'string' && new Set(['system', 'serif']).has(live.bodyFont) &&
+    typeof live.color === 'string' && new Set(['acid', 'sky', 'sepia']).has(live.color) &&
+    typeof live.spacing === 'string' && new Set(['tight', 'balanced', 'loose']).has(live.spacing) &&
+    typeof live.density === 'string' && new Set(['compact', 'comfortable', 'roomy']).has(live.density) &&
+    typeof live.radius === 'string' && new Set(['sharp', 'soft', 'pill']).has(live.radius) &&
+    typeof live.surface === 'string' && new Set(['flat', 'outlined', 'elevated']).has(live.surface)
   );
 }
 

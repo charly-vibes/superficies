@@ -107,8 +107,24 @@ const shadowScales: Record<Surface, string[]> = {
   elevated: ['0 18px 40px rgb(76 55 31 / 0.18)'],
 };
 
+const darkModeAccents: Record<Colorway, string> = {
+  acid: 'oklch(82% 0.20 85)',
+  sky: 'oklch(78% 0.15 235)',
+  sepia: 'oklch(74% 0.14 52)',
+};
+
 export function deriveDesignTokens(state: CatalogState): DesignTokens {
-  const semantic = (Object.entries(colorTokens[state.live.color]) as Array<[ColorSwatch['name'], string]>).map(
+  const lightTokens = colorTokens[state.live.color];
+  const effectiveTokens: Record<ColorSwatch['name'], string> = state.mode === 'dark'
+    ? {
+        surface: 'oklch(18% 0.02 255)',
+        ink: 'oklch(96% 0.01 95)',
+        muted: 'oklch(78% 0.02 95)',
+        accent: darkModeAccents[state.live.color],
+      }
+    : lightTokens;
+
+  const semantic = (Object.entries(effectiveTokens) as Array<[ColorSwatch['name'], string]>).map(
     ([name, oklch]) => ({ name, oklch, hex: oklchToHex(oklch) }),
   );
   const byName = Object.fromEntries(semantic.map((swatch) => [swatch.name, swatch])) as Record<

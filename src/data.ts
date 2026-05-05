@@ -1,5 +1,11 @@
 import type { Archetype, ArchetypeContent, BodyFont, Preset, PresetDefinition, Typography } from './types.ts';
 
+export const archetypeLabels: Record<Archetype, string> = {
+  saas: 'SaaS',
+  restaurant: 'Restaurant',
+  editorial: 'Editorial',
+};
+
 export const validBodyFonts: Record<Typography, BodyFont[]> = {
   chunky: ['system'],
   system: ['system', 'serif'],

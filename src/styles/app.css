@@ -563,6 +563,18 @@ button:disabled {
   --muted: oklch(78% 0.02 95);
   --border: oklch(80% 0.02 95);
   --shadow: 6px 6px 0 rgb(0 0 0 / 0.45);
+  --accent: oklch(82% 0.20 85);
+  --accent-ink: oklch(18% 0.05 85);
+}
+
+.shell[data-mode='dark'][data-color='sky'] {
+  --accent: oklch(78% 0.15 235);
+  --accent-ink: oklch(15% 0.04 250);
+}
+
+.shell[data-mode='dark'][data-color='sepia'] {
+  --accent: oklch(74% 0.14 52);
+  --accent-ink: oklch(15% 0.04 62);
 }
 
 .shell[data-mode='both'] .preview-grid {

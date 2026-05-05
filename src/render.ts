@@ -1,4 +1,4 @@
-import { presets } from './data.ts';
+import { archetypeContent, archetypeLabels, presets } from './data.ts';
 import { getExportArtifact, listExportArtifacts, type ExportTab } from './export.ts';
 import { resolveHeroContent } from './state.ts';
 import { deriveDesignTokens, type DesignTokens } from './tokens.ts';
@@ -36,9 +36,9 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
             <label>
               <span>Archetype</span>
               <select name="archetype">
-                ${option('saas', 'SaaS', state.archetype)}
-                ${option('restaurant', 'Restaurant', state.archetype)}
-                ${option('editorial', 'Editorial', state.archetype)}
+                ${Object.keys(archetypeContent)
+                  .map((id) => option(id, archetypeLabels[id as keyof typeof archetypeLabels], state.archetype))
+                  .join('')}
               </select>
             </label>
             <label>
@@ -286,8 +286,8 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
           <div class="tab-row">
             ${exportArtifacts
               .map(
-                (artifact, index) =>
-                  `<button type="button" data-export-tab="${artifact.tab}" class="${index === 0 ? 'is-active' : ''}">${escapeHtml(artifact.label)}</button>`,
+                (artifact) =>
+                  `<button type="button" data-export-tab="${artifact.tab}" class="${artifact.tab === exportArtifacts[0].tab ? 'is-active' : ''}">${escapeHtml(artifact.label)}</button>`,
               )
               .join('')}
           </div>
@@ -314,7 +314,9 @@ export function attachExportInteractions(target: HTMLElement, state: CatalogStat
     return;
   }
 
-  let activeTab: ExportTab = 'full';
+  let activeTab: ExportTab = (
+    target.querySelector<HTMLButtonElement>('[data-export-tab].is-active')?.dataset.exportTab as ExportTab | undefined
+  ) ?? 'full';
 
   openButtons.forEach((btn) => btn.addEventListener('click', () => dialog.showModal()));
 

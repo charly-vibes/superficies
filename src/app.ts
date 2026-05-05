@@ -19,13 +19,13 @@ export function resolveInitialState(hash: string): CatalogState {
 export function createCatalogController(deps: CatalogControllerDeps) {
   let state = resolveInitialState(deps.getHash());
 
-  function commit(nextState: CatalogState, syncHash: boolean): void {
+  function applyState(nextState: CatalogState, syncHash: boolean): void {
     state = nextState;
     deps.render(state);
     deps.attachExportInteractions(state);
     deps.bindControls((patch) => {
       const nextState = typeof patch === 'function' ? patch(state) : mergeState(patch, state);
-      commit(nextState, true);
+      applyState(nextState, true);
     });
 
     if (!syncHash) {
@@ -40,10 +40,10 @@ export function createCatalogController(deps: CatalogControllerDeps) {
 
   return {
     initialize(): void {
-      commit(state, true);
+      applyState(state, true);
     },
     onHashChange(): void {
-      commit(resolveInitialState(deps.getHash()), false);
+      applyState(resolveInitialState(deps.getHash()), false);
     },
   };
 }
