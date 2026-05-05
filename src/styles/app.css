@@ -441,11 +441,18 @@ button:disabled {
 .export-output {
   margin: 0;
   min-height: 16rem;
+  max-height: 24rem;
   overflow: auto;
   padding: 1rem;
   border-radius: 0.9rem;
   background: oklch(98% 0.01 95);
   border: 2px solid var(--border);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.export-context-grid textarea {
+  min-height: 6rem;
 }
 
 .copy-feedback {
