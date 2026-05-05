@@ -336,12 +336,20 @@ button:disabled {
 }
 
 .shell[data-hero-layout='terminal'] .hero-zone {
-  font-family: 'Cascadia Code', 'Fira Code', 'Menlo', 'Consolas', monospace;
   background: var(--bg);
   color: var(--ink);
   border-color: var(--border);
   border-radius: 0.4rem;
   padding: 0;
+}
+
+/* Terminal chrome: tab bar, prompts, feature markers, and action buttons stay monospace */
+.shell[data-hero-layout='terminal'] .hero-zone .zone-label,
+.shell[data-hero-layout='terminal'] .hero-zone .eyebrow,
+.shell[data-hero-layout='terminal'] .hero-zone h2,
+.shell[data-hero-layout='terminal'] .hero-zone .feature-list,
+.shell[data-hero-layout='terminal'] .hero-zone .hero-actions button {
+  font-family: 'Cascadia Code', 'Fira Code', 'Menlo', 'Consolas', monospace;
 }
 
 .shell[data-hero-layout='terminal'] .hero-zone .zone-label {
@@ -351,19 +359,16 @@ button:disabled {
   border-block-end: 1px solid var(--border);
   grid-column: 1 / -1;
   letter-spacing: 0;
-  font-family: inherit;
   font-size: 0.8rem;
 }
 
 .shell[data-hero-layout='terminal'] .hero-zone .eyebrow {
   color: var(--accent);
   padding: 0.75rem 1rem 0;
-  font-family: inherit;
   letter-spacing: 0;
 }
 
 .shell[data-hero-layout='terminal'] .hero-zone h2 {
-  font-family: inherit;
   font-size: 1.1rem;
   font-weight: normal;
   max-width: none;
@@ -376,10 +381,10 @@ button:disabled {
   color: var(--accent);
 }
 
+/* Body copy inherits from .shell — picks up the active typography token */
 .shell[data-hero-layout='terminal'] .hero-zone p:not(.zone-label):not(.eyebrow) {
   color: var(--muted);
   padding: 0 1rem;
-  font-family: inherit;
   font-size: 0.9rem;
 }
 
@@ -412,7 +417,6 @@ button:disabled {
   background: var(--panel);
   color: var(--accent);
   border-color: var(--border);
-  font-family: inherit;
   font-size: 0.85rem;
   box-shadow: none;
 }
@@ -735,6 +739,11 @@ button:disabled {
 .preview-pane {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
+}
+
+.mode-split .specimen-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .pane-label {
