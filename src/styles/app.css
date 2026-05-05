@@ -241,9 +241,32 @@ button:disabled {
   max-width: none;
 }
 
+.shell[data-hero-layout='magazine'] .hero-zone {
+  grid-template-columns: 1fr minmax(0, 0.6fr);
+}
+
+.shell[data-hero-layout='magazine'] .hero-zone .zone-label {
+  grid-column: 1 / -1;
+}
+
+.shell[data-hero-layout='magazine'] .hero-zone .eyebrow {
+  grid-column: 1;
+}
+
 .shell[data-hero-layout='magazine'] .hero-zone h2 {
   font-family: Georgia, 'Times New Roman', serif;
-  max-width: 16ch;
+  max-width: none;
+  grid-column: 1;
+}
+
+.shell[data-hero-layout='magazine'] .hero-zone p:not(.zone-label):not(.eyebrow),
+.shell[data-hero-layout='magazine'] .hero-zone .feature-list,
+.shell[data-hero-layout='magazine'] .hero-zone .hero-actions {
+  grid-column: 2;
+}
+
+.shell[data-hero-layout='magazine'] .hero-zone .hero-actions button {
+  white-space: nowrap;
 }
 
 .shell[data-hero-layout='sidebar+main'] .hero-zone {
@@ -270,7 +293,7 @@ button:disabled {
 .specimen-grid {
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .specimen-group {
@@ -603,13 +626,19 @@ button:disabled {
   .export-header,
   .export-footer,
   .shell[data-hero-layout='bento'] .hero-zone,
+  .shell[data-hero-layout='magazine'] .hero-zone,
   .shell[data-hero-layout='sidebar+main'] .hero-zone {
     align-items: stretch;
     flex-direction: column;
   }
 
   .shell[data-hero-layout='bento'] .hero-zone,
+  .shell[data-hero-layout='magazine'] .hero-zone,
   .shell[data-hero-layout='sidebar+main'] .hero-zone {
     display: flex;
+  }
+
+  .specimen-grid {
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
   }
 }
