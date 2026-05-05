@@ -28,6 +28,8 @@ const archetypeAliases = {
   saas: 's',
   restaurant: 'r',
   editorial: 'e',
+  tui: 't',
+  cli: 'c',
 } as const satisfies Record<Archetype, string>;
 
 const modeAliases = {
@@ -41,6 +43,7 @@ const heroLayoutAliases = {
   bento: 'be',
   magazine: 'ma',
   'sidebar+main': 'sm',
+  terminal: 'te',
 } as const satisfies Record<HeroLayout, string>;
 
 const typographyAliases = {
@@ -237,9 +240,9 @@ function isCatalogState(value: unknown): value is CatalogState {
 
   if (
     typeof s.preset !== 'string' || !new Set(['neobrutalist', 'softSaas', 'warmEditorial']).has(s.preset) ||
-    typeof s.archetype !== 'string' || !new Set(['saas', 'restaurant', 'editorial']).has(s.archetype) ||
+    typeof s.archetype !== 'string' || !new Set(['saas', 'restaurant', 'editorial', 'tui', 'cli']).has(s.archetype) ||
     typeof s.mode !== 'string' || !new Set(['light', 'dark', 'both']).has(s.mode) ||
-    typeof s.heroLayout !== 'string' || !new Set(['hero+features', 'bento', 'magazine', 'sidebar+main']).has(s.heroLayout) ||
+    typeof s.heroLayout !== 'string' || !new Set(['hero+features', 'bento', 'magazine', 'sidebar+main', 'terminal']).has(s.heroLayout) ||
     typeof s.departedFromPreset !== 'boolean' ||
     typeof s.live !== 'object' || s.live === null ||
     typeof s.contentOverrides !== 'object' || s.contentOverrides === null ||

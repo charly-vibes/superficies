@@ -4,6 +4,8 @@ export const archetypeLabels: Record<Archetype, string> = {
   saas: 'SaaS',
   restaurant: 'Restaurant',
   editorial: 'Editorial',
+  tui: 'TUI',
+  cli: 'CLI tool',
 };
 
 export const validBodyFonts: Record<Typography, BodyFont[]> = {
@@ -89,6 +91,26 @@ export const archetypeContent: Record<Archetype, ArchetypeContent> = {
       cta: 'Review issue package',
       body: 'A publishing surface for long reads, opinion packages, newsletters, and archive browsing with deliberate type rhythm.',
       features: ['Reading rhythm', 'Issue packaging', 'Archive depth'],
+    },
+  },
+  tui: {
+    hero: {
+      eyebrow: 'Terminal UI dashboard',
+      title: 'Design dense, navigable terminal interfaces.',
+      copy: 'Preview token-driven TUI layouts — status bars, panes, key bindings — before committing to a rendering library.',
+      cta: 'Open dashboard',
+      body: 'A full-screen terminal application surface for system monitors, process managers, and developer dashboards that live in the terminal.',
+      features: ['Status bar', 'Pane layout', 'Key binding map'],
+    },
+  },
+  cli: {
+    hero: {
+      eyebrow: 'CLI tool',
+      title: 'Shape the output voice of your command-line tool.',
+      copy: 'Tune color, density, and typographic weight for terminal output that is readable across themes and terminal emulators.',
+      cta: 'Run command',
+      body: 'A minimal, text-first surface for progress indicators, structured output, error messages, and interactive prompts in CI and local workflows.',
+      features: ['Progress output', 'Error formatting', 'Interactive prompt'],
     },
   },
 };

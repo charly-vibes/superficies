@@ -145,6 +145,13 @@ button:disabled {
   font-size: 0.9rem;
 }
 
+.about-body p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .sidebar-footer {
   padding: 1rem;
   margin-top: auto;
@@ -188,6 +195,11 @@ button:disabled {
   align-items: end;
   margin-bottom: 1.5rem;
   padding: 1rem 1.25rem;
+}
+
+.export-cta {
+  background: var(--accent);
+  color: var(--accent-ink);
 }
 
 .preview-grid {
@@ -288,6 +300,92 @@ button:disabled {
 .shell[data-hero-layout='sidebar+main'] .hero-zone p:not(.zone-label):not(.eyebrow),
 .shell[data-hero-layout='sidebar+main'] .hero-zone .hero-actions {
   grid-column: 2;
+}
+
+.shell[data-hero-layout='terminal'] .hero-zone {
+  font-family: 'Cascadia Code', 'Fira Code', 'Menlo', 'Consolas', monospace;
+  background: oklch(12% 0.01 255);
+  color: oklch(90% 0.04 150);
+  border-color: oklch(30% 0.02 255);
+  border-radius: 0.4rem;
+  padding: 0;
+}
+
+.shell[data-hero-layout='terminal'] .hero-zone .zone-label {
+  background: oklch(20% 0.02 255);
+  color: oklch(60% 0.04 255);
+  padding: 0.4rem 1rem;
+  border-block-end: 1px solid oklch(30% 0.02 255);
+  grid-column: 1 / -1;
+  letter-spacing: 0;
+  font-family: inherit;
+  font-size: 0.8rem;
+}
+
+.shell[data-hero-layout='terminal'] .hero-zone .eyebrow {
+  color: oklch(65% 0.15 150);
+  padding: 0.75rem 1rem 0;
+  font-family: inherit;
+  letter-spacing: 0;
+}
+
+.shell[data-hero-layout='terminal'] .hero-zone h2 {
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: normal;
+  max-width: none;
+  color: oklch(95% 0.08 150);
+  padding: 0 1rem;
+}
+
+.shell[data-hero-layout='terminal'] .hero-zone h2::before {
+  content: '$ ';
+  color: oklch(65% 0.18 150);
+}
+
+.shell[data-hero-layout='terminal'] .hero-zone p:not(.zone-label):not(.eyebrow) {
+  color: oklch(75% 0.03 255);
+  padding: 0 1rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.shell[data-hero-layout='terminal'] .hero-zone .feature-list {
+  padding: 0 1rem;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.shell[data-hero-layout='terminal'] .hero-zone .feature-list li {
+  border: none;
+  border-radius: 0;
+  padding: 0.1rem 0;
+  font-size: 0.85rem;
+  color: oklch(70% 0.04 255);
+}
+
+.shell[data-hero-layout='terminal'] .hero-zone .feature-list li::before {
+  content: '  › ';
+  color: oklch(65% 0.18 150);
+}
+
+.shell[data-hero-layout='terminal'] .hero-zone .hero-actions {
+  padding: 0.75rem 1rem 1rem;
+  border-block-start: 1px solid oklch(30% 0.02 255);
+  margin-block-start: 0.5rem;
+}
+
+.shell[data-hero-layout='terminal'] .hero-zone .hero-actions button {
+  background: oklch(20% 0.02 255);
+  color: oklch(65% 0.18 150);
+  border-color: oklch(40% 0.02 255);
+  font-family: inherit;
+  font-size: 0.85rem;
+  box-shadow: none;
+}
+
+.shell[data-hero-layout='terminal'] .hero-zone .hero-actions button.secondary {
+  color: oklch(55% 0.03 255);
 }
 
 .specimen-row {

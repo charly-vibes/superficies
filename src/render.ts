@@ -99,6 +99,15 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
           <button type="button" class="sidebar-close" aria-label="Close controls">Close</button>
         </div>
 
+        <details class="sidebar-section about-section">
+          <summary>About</summary>
+          <div class="sidebar-section-body about-body">
+            <p>Superficies is a design-token catalog for generating a deterministic visual brief. Adjust the controls to define a typographic, color, and spatial system, then export the brief as structured context for an AI design agent or a hand-off document.</p>
+            <p>The <strong>hero zone</strong> previews your archetype layout. The <strong>specimen strip</strong> stress-tests components against your tokens. The <strong>token panel</strong> shows computed values and contrast diagnostics.</p>
+            <p>Use <strong>Both</strong> mode to compare light and dark simultaneously. Use <strong>Export brief</strong> to copy the output.</p>
+          </div>
+        </details>
+
         <details class="sidebar-section" open>
           <summary>Preset &amp; mode</summary>
           <div class="sidebar-section-body">
@@ -133,6 +142,7 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
                 ${option('bento', 'Bento', state.heroLayout)}
                 ${option('magazine', 'Magazine', state.heroLayout)}
                 ${option('sidebar+main', 'Sidebar + main', state.heroLayout)}
+                ${option('terminal', 'Terminal', state.heroLayout)}
               </select>
             </label>
             <p class="preset-status" aria-live="polite">${presetStatus}</p>
@@ -231,6 +241,7 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
             <p class="kicker">superficies</p>
             <h1>Design catalog tracer bullet</h1>
           </div>
+          <button type="button" data-export-open class="export-cta">Export brief</button>
         </header>
 
         ${appMode === 'both'

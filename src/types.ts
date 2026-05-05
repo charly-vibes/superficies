@@ -1,7 +1,7 @@
 export type Mode = 'light' | 'dark' | 'both';
-export type Archetype = 'saas' | 'restaurant' | 'editorial';
+export type Archetype = 'saas' | 'restaurant' | 'editorial' | 'tui' | 'cli';
 export type Preset = 'neobrutalist' | 'softSaas' | 'warmEditorial';
-export type HeroLayout = 'hero+features' | 'bento' | 'magazine' | 'sidebar+main';
+export type HeroLayout = 'hero+features' | 'bento' | 'magazine' | 'sidebar+main' | 'terminal';
 
 export type Typography = 'chunky' | 'system' | 'serif';
 export type BodyFont = 'system' | 'serif';
