@@ -18,17 +18,7 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
         <main class="preview-grid">
           <section class="zone hero-zone">
             <p class="zone-label">Hero zone</p>
-            <p class="eyebrow">${escapeHtml(content.eyebrow)}</p>
-            <h2>${escapeHtml(content.title)}</h2>
-            <p>${escapeHtml(content.copy)}</p>
-            <p class="hero-body">${escapeHtml(content.body)}</p>
-            <ul class="feature-list">
-              ${content.features.map((feature) => `<li>${escapeHtml(feature)}</li>`).join('')}
-            </ul>
-            <div class="hero-actions">
-              <button type="button">${escapeHtml(content.cta)}</button>
-              <button type="button" class="secondary">Compare tokens</button>
-            </div>
+            ${renderHeroByArchetype(state, content)}
           </section>
 
           <section class="zone specimen-zone">
@@ -489,4 +479,132 @@ function escapeHtml(value: string): string {
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;');
+}
+
+function renderHeroByArchetype(state: CatalogState, content: HeroContent): string {
+  if (state.archetype === 'saas') {
+    return `
+      <div class="ghost-dashboard">
+        <div class="ghost-sidebar">
+          <div class="ghost-nav-item is-active"></div>
+          <div class="ghost-nav-item"></div>
+          <div class="ghost-nav-item"></div>
+        </div>
+        <div class="ghost-main">
+          <header class="ghost-header">
+            <p class="eyebrow">${escapeHtml(content.eyebrow)}</p>
+            <h2>${escapeHtml(content.title)}</h2>
+          </header>
+          <div class="ghost-stats-grid">
+            <div class="ghost-stat-card">${ghostChart('accent')}</div>
+            <div class="ghost-stat-card">${ghostChart('muted')}</div>
+            <div class="ghost-stat-card">${ghostChart('accent')}</div>
+          </div>
+          <div class="ghost-content-split">
+            <div class="ghost-list-panel">
+              <h3>Activity</h3>
+              ${ghostActivity(4)}
+            </div>
+            <div class="ghost-form-panel">
+              <p>${escapeHtml(content.copy)}</p>
+              <div class="hero-actions">
+                <button type="button">${escapeHtml(content.cta)}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (state.archetype === 'editorial') {
+    return `
+      <div class="ghost-magazine">
+        <p class="eyebrow">${escapeHtml(content.eyebrow)}</p>
+        <h2 class="ghost-drop-cap">${escapeHtml(content.title)}</h2>
+        <div class="ghost-editorial-grid">
+          <div class="ghost-col-main">
+            <p class="hero-body">${escapeHtml(content.body)}</p>
+            <p>${escapeHtml(content.copy)}</p>
+          </div>
+          <div class="ghost-col-side">
+            <div class="ghost-pull-quote">"${content.features[0]}"</div>
+            <ul class="feature-list">
+              ${content.features.slice(1).map((f: string) => `<li>${escapeHtml(f)}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <button type="button">${escapeHtml(content.cta)}</button>
+        </div>
+      </div>
+    `;
+  }
+
+  if (state.archetype === 'cli' || state.archetype === 'tui') {
+    return `
+      <div class="ghost-terminal">
+        <div class="terminal-chrome">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+        <div class="terminal-body">
+          <div class="terminal-line"><span class="prompt">$</span> superficies init --archetype ${state.archetype}</div>
+          <div class="terminal-line success">✓ System rhythm initialized (ratio: ${state.live.scaleRatio})</div>
+          <div class="terminal-line"><span class="prompt">$</span> superficies preview</div>
+          <div class="terminal-output">
+            <p class="eyebrow">${escapeHtml(content.eyebrow)}</p>
+            <h2>${escapeHtml(content.title)}</h2>
+            <p>${escapeHtml(content.copy)}</p>
+            <ul class="feature-list">
+              ${content.features.map((f: string) => `<li>${escapeHtml(f)}</li>`).join('')}
+            </ul>
+          </div>
+          <div class="terminal-line"><span class="cursor">_</span></div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Fallback to default layout
+  return `
+    <p class="eyebrow">${escapeHtml(content.eyebrow)}</p>
+    <h2>${escapeHtml(content.title)}</h2>
+    <p>${escapeHtml(content.copy)}</p>
+    <p class="hero-body">${escapeHtml(content.body)}</p>
+    <ul class="feature-list">
+      ${content.features.map((feature: any) => `<li>${escapeHtml(feature)}</li>`).join('')}
+    </ul>
+    <div class="hero-actions">
+      <button type="button">${escapeHtml(content.cta)}</button>
+      <button type="button" class="secondary">Compare tokens</button>
+    </div>
+  `;
+}
+
+function ghostChart(colorClass: string): string {
+  return `
+    <div class="ghost-chart ${colorClass}">
+      <div class="bar" style="height: 40%"></div>
+      <div class="bar" style="height: 70%"></div>
+      <div class="bar" style="height: 50%"></div>
+      <div class="bar" style="height: 90%"></div>
+      <div class="bar" style="height: 60%"></div>
+    </div>
+  `;
+}
+
+function ghostActivity(count: number): string {
+  return `
+    <div class="ghost-activity-list">
+      ${Array.from({ length: count }).map(() => `
+        <div class="ghost-activity-item">
+          <div class="avatar"></div>
+          <div class="lines">
+            <div class="line"></div>
+            <div class="line short"></div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
 }
