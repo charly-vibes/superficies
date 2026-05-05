@@ -85,6 +85,7 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
                 ${option('acid', 'Acid', state.live.color)}
                 ${option('sky', 'Sky', state.live.color)}
                 ${option('sepia', 'Sepia', state.live.color)}
+                ${option('vinyl', 'Vinyl', state.live.color)}
               </select>
             </label>
             <label>

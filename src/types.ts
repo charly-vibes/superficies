@@ -5,7 +5,7 @@ export type HeroLayout = 'hero+features' | 'bento' | 'magazine' | 'sidebar+main'
 
 export type Typography = 'chunky' | 'system' | 'serif';
 export type BodyFont = 'system' | 'serif';
-export type Colorway = 'acid' | 'sky' | 'sepia';
+export type Colorway = 'acid' | 'sky' | 'sepia' | 'vinyl';
 export type Spacing = 'tight' | 'balanced' | 'loose';
 export type Density = 'compact' | 'comfortable' | 'roomy';
 export type Radius = 'sharp' | 'soft' | 'pill';

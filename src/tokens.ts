@@ -87,6 +87,12 @@ const colorTokens: Record<Colorway, Record<ColorSwatch['name'], string>> = {
     accent: 'oklch(63% 0.12 52)',
     muted: 'oklch(90% 0.04 78)',
   },
+  vinyl: {
+    surface: 'oklch(97% 0.02 285)',
+    ink: 'oklch(23% 0.15 278)',
+    accent: 'oklch(62% 0.22 32)',
+    muted: 'oklch(88% 0.05 280)',
+  },
 };
 
 const spacingScales: Record<Spacing, string[]> = {
@@ -111,6 +117,7 @@ const darkModeAccents: Record<Colorway, string> = {
   acid: 'oklch(82% 0.20 85)',
   sky: 'oklch(78% 0.15 235)',
   sepia: 'oklch(74% 0.14 52)',
+  vinyl: 'oklch(74% 0.24 32)',
 };
 
 export function deriveDesignTokens(state: CatalogState): DesignTokens {

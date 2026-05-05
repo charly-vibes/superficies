@@ -502,6 +502,12 @@ button:disabled {
   --accent-ink: oklch(98% 0.01 85);
 }
 
+.shell[data-color='vinyl'] {
+  --bg: oklch(95% 0.03 280);
+  --accent: oklch(62% 0.22 32);
+  --accent-ink: oklch(98% 0.01 85);
+}
+
 .shell[data-spacing='tight'] .preview-grid,
 .shell[data-spacing='tight'] .actions,
 .shell[data-density='compact'] .actions {
@@ -575,6 +581,11 @@ button:disabled {
 .shell[data-mode='dark'][data-color='sepia'] {
   --accent: oklch(74% 0.14 52);
   --accent-ink: oklch(15% 0.04 62);
+}
+
+.shell[data-mode='dark'][data-color='vinyl'] {
+  --accent: oklch(74% 0.24 32);
+  --accent-ink: oklch(15% 0.04 35);
 }
 
 .shell[data-mode='both'] .preview-grid {

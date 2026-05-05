@@ -58,6 +58,7 @@ const colorAliases = {
   acid: 'a',
   sky: 's',
   sepia: 'p',
+  vinyl: 'v',
 } as const satisfies Record<Colorway, string>;
 
 const spacingAliases = {
@@ -251,7 +252,7 @@ function isCatalogState(value: unknown): value is CatalogState {
   return (
     typeof live.typography === 'string' && new Set(['chunky', 'system', 'serif']).has(live.typography) &&
     typeof live.bodyFont === 'string' && new Set(['system', 'serif']).has(live.bodyFont) &&
-    typeof live.color === 'string' && new Set(['acid', 'sky', 'sepia']).has(live.color) &&
+    typeof live.color === 'string' && new Set(['acid', 'sky', 'sepia', 'vinyl']).has(live.color) &&
     typeof live.spacing === 'string' && new Set(['tight', 'balanced', 'loose']).has(live.spacing) &&
     typeof live.density === 'string' && new Set(['compact', 'comfortable', 'roomy']).has(live.density) &&
     typeof live.radius === 'string' && new Set(['sharp', 'soft', 'pill']).has(live.radius) &&
