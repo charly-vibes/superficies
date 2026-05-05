@@ -85,6 +85,8 @@ test('renderApp export workspace includes all artifact tabs and copy feedback re
   assert.match(target.innerHTML, /data-export-tab="minimum"/);
   assert.match(target.innerHTML, /data-export-tab="tokens"/);
   assert.match(target.innerHTML, /data-copy/);
+  assert.match(target.innerHTML, /data-download-export="full"/);
+  assert.match(target.innerHTML, /data-download-export="tokens"/);
   assert.match(target.innerHTML, /copy-feedback" aria-live="polite"/);
 });
 

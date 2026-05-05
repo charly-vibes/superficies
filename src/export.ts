@@ -28,6 +28,30 @@ export function getExportArtifact(state: CatalogState, tab: ExportTab): ExportAr
   };
 }
 
+export function getExportFilename(state: CatalogState, tab: ExportTab): string {
+  if (tab === 'full') {
+    return `superficies-full-brief.${state.exportContext.exportFormat === 'markdown' ? 'md' : 'xml'}`;
+  }
+
+  if (tab === 'tokens') {
+    return 'superficies-token-json.json';
+  }
+
+  return 'superficies-minimum-brief.txt';
+}
+
+export function getExportMimeType(state: CatalogState, tab: ExportTab): string {
+  if (tab === 'full') {
+    return state.exportContext.exportFormat === 'markdown' ? 'text/markdown' : 'application/xml';
+  }
+
+  if (tab === 'tokens') {
+    return 'application/json';
+  }
+
+  return 'text/plain';
+}
+
 export function getExportText(state: CatalogState, tab: ExportTab): string {
   const content = resolveHeroContent(state);
   const tokens = deriveDesignTokens(state);

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { getExportArtifact, getExportText, listExportArtifacts } from './export.ts';
+import { getExportArtifact, getExportFilename, getExportMimeType, getExportText, listExportArtifacts } from './export.ts';
 import { defaultState } from './state.ts';
 import type { CatalogState } from './types.ts';
 
@@ -101,4 +101,18 @@ test('getExportArtifact returns deterministic tab-specific content from current 
   assert.match(getExportArtifact(state, 'minimum').content, /Accessibility target: WCAG 2\.2 AA/);
   assert.match(getExportArtifact(state, 'minimum').content, /URL-hash-only state/);
   assert.equal(JSON.parse(getExportArtifact(state, 'tokens').content).live.surface, 'elevated');
+});
+
+test('export artifacts expose deterministic download filenames and MIME types', () => {
+  const markdownState: CatalogState = {
+    ...defaultState,
+    exportContext: { ...defaultState.exportContext, exportFormat: 'markdown' },
+  };
+
+  assert.equal(getExportFilename(defaultState, 'full'), 'superficies-full-brief.xml');
+  assert.equal(getExportFilename(markdownState, 'full'), 'superficies-full-brief.md');
+  assert.equal(getExportFilename(defaultState, 'tokens'), 'superficies-token-json.json');
+  assert.equal(getExportMimeType(defaultState, 'full'), 'application/xml');
+  assert.equal(getExportMimeType(markdownState, 'full'), 'text/markdown');
+  assert.equal(getExportMimeType(defaultState, 'tokens'), 'application/json');
 });

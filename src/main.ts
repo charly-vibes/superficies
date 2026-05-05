@@ -15,7 +15,13 @@ const appRoot = target;
 const controller = createCatalogController({
   getHash: () => window.location.hash,
   replaceHash: (hash) => history.replaceState(null, '', hash),
-  render: (state) => renderApp(appRoot, state),
+  render: (state) => {
+    const wasExportDialogOpen = appRoot.querySelector<HTMLDialogElement>('.export-dialog')?.open ?? false;
+    renderApp(appRoot, state);
+    if (wasExportDialogOpen) {
+      appRoot.querySelector<HTMLDialogElement>('.export-dialog')?.showModal();
+    }
+  },
   attachExportInteractions: (state) => attachExportInteractions(appRoot, state),
   bindControls: (onPatch) => bindControls(appRoot, onPatch),
 });

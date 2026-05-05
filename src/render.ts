@@ -1,5 +1,5 @@
 import { archetypeContent, archetypeLabels, presets } from './data.ts';
-import { getExportArtifact, listExportArtifacts, type ExportTab } from './export.ts';
+import { getExportArtifact, getExportFilename, getExportMimeType, listExportArtifacts, type ExportTab } from './export.ts';
 import { resolveHeroContent } from './state.ts';
 import { deriveDesignTokens, type DesignTokens } from './tokens.ts';
 import type { CatalogState } from './types.ts';
@@ -239,7 +239,7 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
         <header class="topbar">
           <div>
             <p class="kicker">superficies</p>
-            <h1>Design catalog tracer bullet</h1>
+            <h1>Visual system workbench</h1>
           </div>
           <button type="button" data-export-open class="export-cta">Export brief</button>
         </header>
@@ -319,7 +319,11 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
           </div>
           <pre class="export-output">${escapeHtml(exportText)}</pre>
           <div class="export-footer">
-            <button type="button" data-copy>Copy</button>
+            <div class="export-actions">
+              <button type="button" data-copy>Copy</button>
+              <button type="button" data-download-export="full">Download full brief</button>
+              <button type="button" data-download-export="tokens">Download token JSON</button>
+            </div>
             <span class="copy-feedback" aria-live="polite"></span>
           </div>
         </form>
@@ -335,6 +339,7 @@ export function attachExportInteractions(target: HTMLElement, state: CatalogStat
   const openButtons = target.querySelectorAll<HTMLButtonElement>('[data-export-open]');
   const tabButtons = target.querySelectorAll<HTMLButtonElement>('[data-export-tab]');
   const copyButton = target.querySelector<HTMLButtonElement>('[data-copy]');
+  const downloadButtons = target.querySelectorAll<HTMLButtonElement>('[data-download-export]');
 
   if (!dialog || !output || !feedback || openButtons.length === 0 || !copyButton) {
     return;
@@ -369,6 +374,32 @@ export function attachExportInteractions(target: HTMLElement, state: CatalogStat
       feedback.textContent = 'Copy unavailable.';
     }
   });
+
+  downloadButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const tab = button.dataset.downloadExport as ExportTab;
+      downloadExportArtifact(state, tab);
+      feedback.textContent = tab === 'tokens' ? 'Downloaded token JSON.' : 'Downloaded full brief.';
+      window.setTimeout(() => {
+        feedback.textContent = '';
+      }, 1500);
+    });
+  });
+}
+
+function downloadExportArtifact(state: CatalogState, tab: ExportTab): void {
+  const artifact = getExportArtifact(state, tab);
+  const blob = new Blob([artifact.content], { type: `${getExportMimeType(state, tab)};charset=utf-8` });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.download = getExportFilename(state, tab);
+  link.style.display = 'none';
+  document.body.append(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
 function renderTokenPanel(tokens: DesignTokens): string {
