@@ -157,37 +157,29 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
         <details class="sidebar-section" open>
           <summary>Typography</summary>
           <div class="sidebar-section-body">
-            <label>
-              <span>Typography</span>
-              <select name="typography">
-                ${option('chunky', 'Chunky', state.live.typography)}
-                ${option('system', 'System', state.live.typography)}
-                ${option('serif', 'Serif', state.live.typography)}
-              </select>
-            </label>
+            <div class="visual-control-grid">
+              ${['chunky', 'system', 'serif']
+                .map((id) => renderTypographySpecimen(id as any, state.live.typography === id))
+                .join('')}
+            </div>
           </div>
         </details>
 
         <details class="sidebar-section" open>
           <summary>Color &amp; surface</summary>
           <div class="sidebar-section-body">
-            <label>
-              <span>Color</span>
-              <select name="color">
-                ${option('acid', 'Acid', state.live.color)}
-                ${option('sky', 'Sky', state.live.color)}
-                ${option('sepia', 'Sepia', state.live.color)}
-                ${option('vinyl', 'Vinyl', state.live.color)}
-              </select>
-            </label>
-            <label>
-              <span>Surface</span>
-              <select name="surface">
-                ${option('flat', 'Flat', state.live.surface)}
-                ${option('outlined', 'Outlined', state.live.surface)}
-                ${option('elevated', 'Elevated', state.live.surface)}
-              </select>
-            </label>
+            <p class="kicker">Colorway</p>
+            <div class="visual-control-grid">
+              ${['acid', 'sky', 'sepia', 'vinyl']
+                .map((id) => renderColorSwatch(id as any, state.live.color === id))
+                .join('')}
+            </div>
+            <p class="kicker">Surface</p>
+            <div class="visual-control-grid">
+              ${['flat', 'outlined', 'elevated']
+                .map((id) => renderSurfaceSwatch(id as any, state.live.surface === id))
+                .join('')}
+            </div>
           </div>
         </details>
 
@@ -606,5 +598,53 @@ function ghostActivity(count: number): string {
         </div>
       `).join('')}
     </div>
+  `;
+}
+
+function renderColorSwatch(id: string, active: boolean): string {
+  const colors: Record<string, string> = {
+    acid: 'oklch(74% 0.18 85)',
+    sky: 'oklch(68% 0.14 235)',
+    sepia: 'oklch(63% 0.12 52)',
+    vinyl: 'oklch(62% 0.22 32)',
+  };
+
+  return `
+    <button type="button" class="visual-swatch ${active ? 'is-active' : ''}" data-live-control="color" data-value="${id}" title="${id}">
+      <div class="swatch-preview" style="background: ${colors[id]}"></div>
+      <span class="swatch-label">${id}</span>
+    </button>
+  `;
+}
+
+function renderSurfaceSwatch(id: string, active: boolean): string {
+  const styles: Record<string, string> = {
+    flat: 'border: none',
+    outlined: 'border: 2px solid currentColor',
+    elevated: 'box-shadow: 4px 4px 10px rgba(0,0,0,0.2)',
+  };
+
+  return `
+    <button type="button" class="visual-swatch ${active ? 'is-active' : ''}" data-live-control="surface" data-value="${id}" title="${id}">
+      <div class="swatch-preview" style="background: var(--panel); ${styles[id]}"></div>
+      <span class="swatch-label">${id}</span>
+    </button>
+  `;
+}
+
+function renderTypographySpecimen(id: string, active: boolean): string {
+  const families: Record<string, string> = {
+    chunky: 'Arial Black, Impact, sans-serif',
+    system: 'Inter, system-ui, sans-serif',
+    serif: 'Georgia, serif',
+  };
+
+  return `
+    <button type="button" class="visual-specimen ${active ? 'is-active' : ''}" data-live-control="typography" data-value="${id}">
+      <span class="font-preview" style="font-family: ${families[id]}">Aa</span>
+      <div class="font-info">
+        <span class="font-label">${id}</span>
+      </div>
+    </button>
   `;
 }

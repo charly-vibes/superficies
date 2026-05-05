@@ -52,6 +52,7 @@ function bindControls(target: HTMLElement, onPatch: (patch: StateUpdate) => void
   const liveControls = target.querySelectorAll<HTMLSelectElement>(
     'select[name="typography"], select[name="color"], select[name="spacing"], select[name="density"], select[name="radius"], select[name="surface"]',
   );
+  const visualControls = target.querySelectorAll<HTMLButtonElement>('[data-live-control]');
 
   presetSelect?.addEventListener('change', (event) => {
     const value = (event.currentTarget as HTMLSelectElement).value as Preset;
@@ -104,6 +105,18 @@ function bindControls(target: HTMLElement, onPatch: (patch: StateUpdate) => void
   baseSizeInput?.addEventListener('change', (event) => {
     const value = (event.currentTarget as HTMLInputElement).value;
     onPatch((current) => updateLiveDimension('baseSize', value, current));
+  });
+
+  visualControls.forEach((control) => {
+    control.addEventListener('click', () => {
+      const key = control.dataset.liveControl as LiveDimensionKey;
+      const value = control.dataset.value;
+      if (key === 'typography') {
+        onPatch((current) => updateTypography(value as Typography, current));
+      } else {
+        onPatch((current) => updateLiveDimension(key, value as never, current));
+      }
+    });
   });
 
   liveControls.forEach((control) => {

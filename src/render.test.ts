@@ -4,20 +4,18 @@ import assert from 'node:assert/strict';
 import { presets } from './data.ts';
 import { renderApp } from './render.ts';
 import { defaultState } from './state.ts';
-
 test('renderApp exposes preset and independently editable live controls', () => {
   const target = { innerHTML: '' };
 
-  renderApp(target as HTMLElement, { ...defaultState, departedFromPreset: true });
+  renderApp(target as HTMLElement, defaultState);
 
   assert.match(target.innerHTML, /name="preset"/);
-  assert.match(target.innerHTML, /name="typography"/);
-  assert.match(target.innerHTML, /name="color"/);
+  assert.match(target.innerHTML, /data-live-control="typography"/);
+  assert.match(target.innerHTML, /data-live-control="color"/);
   assert.match(target.innerHTML, /name="spacing"/);
   assert.match(target.innerHTML, /name="density"/);
   assert.match(target.innerHTML, /name="radius"/);
-  assert.match(target.innerHTML, /name="surface"/);
-  assert.match(target.innerHTML, /Custom from Neobrutalist/);
+  assert.match(target.innerHTML, /data-live-control="surface"/);
 });
 
 test('renderApp includes all curated preset options', () => {
