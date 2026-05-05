@@ -212,7 +212,7 @@ button:disabled {
   gap: 1rem;
 }
 
-.hero-zone h2 {
+.hero-zone > h2 {
   font-size: clamp(2rem, 5vw, 4rem);
   line-height: 0.95;
   margin: 0.25rem 0 1rem;
@@ -261,7 +261,7 @@ button:disabled {
   grid-column: 1;
 }
 
-.shell[data-hero-layout='bento'] .hero-zone h2 {
+.shell[data-hero-layout='bento'] .hero-zone > h2 {
   max-width: none;
   grid-column: 1;
   grid-row: 3 / span 2;
@@ -306,7 +306,7 @@ button:disabled {
   grid-column: 1;
 }
 
-.shell[data-hero-layout='magazine'] .hero-zone h2 {
+.shell[data-hero-layout='magazine'] .hero-zone > h2 {
   font-family: Georgia, 'Times New Roman', serif;
   max-width: none;
   grid-column: 1;
@@ -335,7 +335,7 @@ button:disabled {
   grid-column: 1;
 }
 
-.shell[data-hero-layout='sidebar+main'] .hero-zone h2,
+.shell[data-hero-layout='sidebar+main'] .hero-zone > h2,
 .shell[data-hero-layout='sidebar+main'] .hero-zone p:not(.zone-label):not(.eyebrow),
 .shell[data-hero-layout='sidebar+main'] .hero-zone .hero-actions {
   grid-column: 2;
@@ -352,7 +352,7 @@ button:disabled {
 /* Terminal chrome: tab bar, prompts, feature markers, and action buttons stay monospace */
 .shell[data-hero-layout='terminal'] .hero-zone .zone-label,
 .shell[data-hero-layout='terminal'] .hero-zone .eyebrow,
-.shell[data-hero-layout='terminal'] .hero-zone h2,
+.shell[data-hero-layout='terminal'] .hero-zone > h2,
 .shell[data-hero-layout='terminal'] .hero-zone .feature-list,
 .shell[data-hero-layout='terminal'] .hero-zone .hero-actions button {
   font-family: 'Cascadia Code', 'Fira Code', 'Menlo', 'Consolas', monospace;
@@ -374,7 +374,7 @@ button:disabled {
   letter-spacing: 0;
 }
 
-.shell[data-hero-layout='terminal'] .hero-zone h2 {
+.shell[data-hero-layout='terminal'] .hero-zone > h2 {
   font-size: 1.1rem;
   font-weight: normal;
   max-width: none;
@@ -382,7 +382,7 @@ button:disabled {
   padding: 0 1rem;
 }
 
-.shell[data-hero-layout='terminal'] .hero-zone h2::before {
+.shell[data-hero-layout='terminal'] .hero-zone > h2::before {
   content: '$ ';
   color: var(--accent);
 }
@@ -477,6 +477,13 @@ button:disabled {
 
 [data-forced-state='loading'] {
   background-image: linear-gradient(90deg, transparent, color-mix(in oklch, var(--panel) 40%, transparent), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -100% 0; }
+  100% { background-position: 100% 0; }
 }
 
 .feedback {
@@ -713,6 +720,13 @@ button:disabled {
   box-shadow: none;
 }
 
+.ghost-header h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.3;
+}
+
 /* Ghost UI Components */
 .ghost-dashboard {
   display: flex;
@@ -762,7 +776,7 @@ button:disabled {
 
 .ghost-stats-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
   gap: 1rem;
 }
 
@@ -798,7 +812,7 @@ button:disabled {
 
 .ghost-content-split {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem;
 }
 
@@ -841,6 +855,12 @@ button:disabled {
   margin: 0 auto;
 }
 
+.ghost-drop-cap {
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1.1;
+  margin: 0 0 1rem;
+}
+
 .ghost-drop-cap::first-letter {
   float: left;
   font-size: 4.5rem;
@@ -869,7 +889,7 @@ button:disabled {
 /* Terminal Styles */
 .ghost-terminal {
   background: var(--ink);
-  color: var(--surface);
+  color: var(--bg);
   border-radius: var(--radius, 6px);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   overflow: hidden;
@@ -877,8 +897,7 @@ button:disabled {
 }
 
 .terminal-chrome {
-  background: var(--muted);
-  opacity: 0.3;
+  background: color-mix(in oklch, var(--muted) 30%, transparent);
   padding: 0.5rem 1rem;
   display: flex;
   gap: 6px;
@@ -888,7 +907,7 @@ button:disabled {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--surface);
+  background: var(--bg);
 }
 
 .terminal-body {
@@ -998,6 +1017,14 @@ button:disabled {
   font-weight: 600;
 }
 
+.shell[data-mode='dark'] {
+  color-scheme: dark;
+  --bg: oklch(18% 0.02 255);
+  --panel: oklch(24% 0.02 255);
+  --ink: oklch(96% 0.01 95);
+  --muted: oklch(78% 0.02 95);
+  --border: oklch(80% 0.02 95);
+  --shadow: 6px 6px 0 rgb(0 0 0 / 0.45);
   --accent: oklch(82% 0.20 85);
   --accent-ink: oklch(18% 0.05 85);
 }
