@@ -16,7 +16,7 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
 
   const previewGrid = `
         <main class="preview-grid">
-          <section class="zone hero-zone">
+          <section class="zone hero-zone" data-archetype="${state.archetype}">
             <p class="zone-label">Hero zone</p>
             ${renderHeroByArchetype(state, content)}
           </section>
@@ -489,35 +489,29 @@ function escapeHtml(value: string): string {
 function renderHeroByArchetype(state: CatalogState, content: HeroContent): string {
   if (state.archetype === 'saas') {
     return `
-      <div class="ghost-dashboard">
+      <p class="eyebrow">${escapeHtml(content.eyebrow)}</p>
+      <h2>${escapeHtml(content.title)}</h2>
+      <div class="ghost-chrome">
         <div class="ghost-sidebar">
           <div class="ghost-nav-item is-active"></div>
           <div class="ghost-nav-item"></div>
           <div class="ghost-nav-item"></div>
         </div>
         <div class="ghost-main">
-          <header class="ghost-header">
-            <p class="eyebrow">${escapeHtml(content.eyebrow)}</p>
-            <h2>${escapeHtml(content.title)}</h2>
-          </header>
           <div class="ghost-stats-grid">
             <div class="ghost-stat-card">${ghostChart('accent')}</div>
             <div class="ghost-stat-card">${ghostChart('muted')}</div>
             <div class="ghost-stat-card">${ghostChart('accent')}</div>
           </div>
-          <div class="ghost-content-split">
-            <div class="ghost-list-panel">
-              <h3>Activity</h3>
-              ${ghostActivity(4)}
-            </div>
-            <div class="ghost-form-panel">
-              <p>${escapeHtml(content.copy)}</p>
-              <div class="hero-actions">
-                <button type="button">${escapeHtml(content.cta)}</button>
-              </div>
-            </div>
+          <div class="ghost-list-panel">
+            <h3>Activity</h3>
+            ${ghostActivity(4)}
           </div>
         </div>
+      </div>
+      <p>${escapeHtml(content.copy)}</p>
+      <div class="hero-actions">
+        <button type="button">${escapeHtml(content.cta)}</button>
       </div>
     `;
   }
