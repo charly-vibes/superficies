@@ -81,6 +81,10 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
           </section>
         </main>`;
 
+  const canQuery = typeof target.querySelector === 'function';
+  const sidebarScroll = canQuery ? (target.querySelector('.sidebar')?.scrollTop ?? 0) : 0;
+  const mainScroll = canQuery ? (target.querySelector('.main-area')?.scrollTop ?? 0) : 0;
+
   target.innerHTML = `
     <div class="shell" data-mode="${appMode}" data-hero-layout="${state.heroLayout}" data-typography="${state.live.typography}" data-color="${state.live.color}" data-spacing="${state.live.spacing}" data-density="${state.live.density}" data-radius="${state.live.radius}" data-surface="${state.live.surface}">
       <nav class="sidebar" aria-label="Design controls">
@@ -328,6 +332,13 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
       </dialog>
     </div>
   `;
+
+  if (canQuery) {
+    const sidebar = target.querySelector<HTMLElement>('.sidebar');
+    const mainArea = target.querySelector<HTMLElement>('.main-area');
+    if (sidebar) sidebar.scrollTop = sidebarScroll;
+    if (mainArea) mainArea.scrollTop = mainScroll;
+  }
 }
 
 export function attachExportInteractions(target: HTMLElement, state: CatalogState): void {
