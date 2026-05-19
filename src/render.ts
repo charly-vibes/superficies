@@ -2,7 +2,7 @@ import { archetypeContent, archetypeLabels, presets } from './data.ts';
 import { getExportArtifact, getExportFilename, getExportMimeType, listExportArtifacts, type ExportTab } from './export.ts';
 import { resolveHeroContent } from './state.ts';
 import { deriveDesignTokens, type DesignTokens } from './tokens.ts';
-import type { CatalogState } from './types.ts';
+import type { CatalogState, HeroContent } from './types.ts';
 
 export function renderApp(target: HTMLElement, state: CatalogState): void {
   const content = resolveHeroContent(state);
