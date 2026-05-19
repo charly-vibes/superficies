@@ -99,6 +99,7 @@ export function renderApp(target: HTMLElement, state: CatalogState): void {
             <p>Superficies is a design-token catalog for generating a deterministic visual brief. Adjust the controls to define a typographic, color, and spatial system, then export the brief as structured context for an AI design agent or a hand-off document.</p>
             <p>The <strong>hero zone</strong> previews your archetype layout. The <strong>specimen strip</strong> stress-tests components against your tokens. The <strong>token panel</strong> shows computed values and contrast diagnostics.</p>
             <p>Use <strong>Both</strong> mode to compare light and dark simultaneously. Use <strong>Export brief</strong> to copy the output.</p>
+            <p><a href="https://github.com/charly-vibes/superficies" target="_blank" rel="noopener">View source on GitHub</a></p>
           </div>
         </details>
 
