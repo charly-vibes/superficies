@@ -6,6 +6,10 @@ install:
 check:
     npm run check
 
+# Validate spec-test correspondence (requires ah)
+validate:
+    ah check
+
 build:
     npm run build
 
